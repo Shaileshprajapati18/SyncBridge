@@ -1,0 +1,31 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@color/white">
+
+    <EditText
+        android:id="@+id/qrCodeTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Scanned QR Code Data"
+        android:inputType="text"
+        android:focusable="false"
+        android:clickable="false"
+        android:cursorVisible="false"
+        android:longClickable="false"
+        android:padding="16dp"
+        android:gravity="center_vertical"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/storage_btn"
+        android:text="STORAGE"
+        android:padding="8dp"
+        android:layout_margin="16dp"
+        android:layout_centerInParent="true"/>
+
+</LinearLayout>
