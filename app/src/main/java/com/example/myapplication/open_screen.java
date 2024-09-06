@@ -13,6 +13,7 @@ public class open_screen extends AppCompatActivity {
     BottomNavigationView bottom_navigation;
     home home=new home();
     my_device my_device=new my_device();
+    scanner scanner=new scanner();
     other_device other_device=new other_device();
     settings settings=new settings();
 
@@ -35,6 +36,10 @@ public class open_screen extends AppCompatActivity {
                 }
                 else if (item.getItemId()==R.id.my_device){
                     getSupportFragmentManager().beginTransaction().replace(R.id.open_screen,my_device).commit();
+                    return true;
+                }
+                else if (item.getItemId()==R.id.scanner){
+                    getSupportFragmentManager().beginTransaction().replace(R.id.open_screen,scanner).commit();
                     return true;
                 }
 

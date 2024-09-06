@@ -10,6 +10,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.core.content.FileProvider;
+import android.net.Uri;
+import java.io.File;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -74,12 +77,71 @@ public class myAdapter extends RecyclerView.Adapter<myAdapter.ViewHolder> {
                 try {
                     Intent intent = new Intent();
                     intent.setAction(Intent.ACTION_VIEW);
-                    String type = "*/*";
-                    intent.setDataAndType(Uri.parse(selectFile.getAbsolutePath()), type);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                    // Get the file URI using FileProvider
+                    Uri fileUri = FileProvider.getUriForFile(context, context.getPackageName() + ".provider", selectFile);
+
+                    // Get the file extension and set MIME type
+                    String fileName = selectFile.getName();
+                    String fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1);
+                    String type;
+
+                    // Determine the MIME type based on the file extension
+                    switch (fileExtension.toLowerCase()) {
+                        case "jpg":
+                        case "jpeg":
+                        case "png":
+                        case "gif":
+                        case "bmp":
+                            type = "image/*";  // Images
+                            break;
+                        case "pdf":
+                            type = "application/pdf";  // PDF
+                            break;
+                        case "txt":
+                            type = "text/plain";  // Text files
+                            break;
+                        case "mp4":
+                        case "mkv":
+                        case "avi":
+                            type = "video/*";  // Videos
+                            break;
+                        case "mp3":
+                        case "wav":
+                        case "ogg":
+                            type = "audio/*";  // Audio
+                            break;
+                        case "doc":
+                        case "docx":
+                            type = "application/msword";  // Word documents
+                            break;
+                        case "xls":
+                        case "xlsx":
+                            type = "application/vnd.ms-excel";  // Excel files
+                            break;
+                        case "ppt":
+                        case "pptx":
+                            type = "application/vnd.ms-powerpoint";  // PowerPoint files
+                            break;
+                        case "zip":
+                        case "rar":
+                            type = "application/zip";  // Compressed files
+                            break;
+                        default:
+                            type = "*/*";  // Fallback for any other type
+                            break;
+                    }
+
+                    // Set the URI and MIME type
+                    intent.setDataAndType(fileUri, type);
+                    intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);  // Grant read permission for the URI
+
+                    // Start the intent to open the file
                     context.startActivity(intent);
+
                 } catch (Exception e) {
-                    Toast.makeText(context, "Cannot open file", Toast.LENGTH_SHORT).show();
+                    // Handle exceptions if no suitable application is found
+                    Toast.makeText(context, "No application found to open this file", Toast.LENGTH_SHORT).show();
                 }
             }
         });

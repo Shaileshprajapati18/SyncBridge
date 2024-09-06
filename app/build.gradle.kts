@@ -44,4 +44,5 @@ dependencies {
     implementation("com.google.zxing:core:3.4.1")
     implementation ("com.google.firebase:firebase-database:20.1.0")
     implementation ("org.nanohttpd:nanohttpd:2.3.1")
+
 }

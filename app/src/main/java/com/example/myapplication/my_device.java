@@ -9,36 +9,51 @@ import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.io.File;
 
 public class my_device extends Fragment {
 
-    private Button storageBtn;
+    RecyclerView recyclerView;
+    TextView noFilesTextView;
+    TextView qrCodeTextView;
+
+    private String qrData; // Variable to store the QR code data
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_my_device, container, false);
 
-        storageBtn = view.findViewById(R.id.storage_btn);
+        recyclerView = view.findViewById(R.id.recycler_view);
+        noFilesTextView = view.findViewById(R.id.nofiles_textview);
+        qrCodeTextView = view.findViewById(R.id.qrCodeTextView); // Link the TextView
 
-        storageBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (checkPermission()) {
-                    openFileListActivity();
-                } else {
-                    requestPermission();
-                }
-            }
-        });
+        if (getArguments() != null) {
+            qrData = getArguments().getString("qrData");
+        }
+
+        // Display the QR code data if available
+        if (qrData != null) {
+            qrCodeTextView.setText(qrData);
+        } else {
+            qrCodeTextView.setText("No QR Code data available.");
+        }
+
+        if (checkPermission()) {
+            displayFiles();
+        } else {
+            requestPermission();
+        }
 
         return view;
     }
@@ -74,11 +89,21 @@ public class my_device extends Fragment {
         }
     }
 
-    private void openFileListActivity() {
-        Intent intent = new Intent(getActivity(), MainActivity2.class);
+    private void displayFiles() {
         String path = Environment.getExternalStorageDirectory().getPath();
-        intent.putExtra("path", path);
-        startActivity(intent);
+        File root = new File(path);
+        File[] files = root.listFiles();
+
+        if (files == null || files.length == 0) {
+            noFilesTextView.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+        } else {
+            noFilesTextView.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            recyclerView.setAdapter(new myAdapter(getActivity(), files));
+        }
     }
 
     @Override
@@ -93,7 +118,7 @@ public class my_device extends Fragment {
                 }
             }
             if (allPermissionsGranted) {
-                openFileListActivity();
+                displayFiles();
             } else {
                 Toast.makeText(getActivity(), "Permission denied. Cannot access storage.", Toast.LENGTH_SHORT).show();
             }
@@ -106,7 +131,7 @@ public class my_device extends Fragment {
         if (requestCode == 1) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 if (Environment.isExternalStorageManager()) {
-                    openFileListActivity();
+                    displayFiles();
                 } else {
                     Toast.makeText(getActivity(), "Permission denied. Cannot access storage.", Toast.LENGTH_SHORT).show();
                 }

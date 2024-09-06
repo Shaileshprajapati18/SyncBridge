@@ -1,7 +1,6 @@
 package com.example.myapplication;
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -10,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.journeyapps.barcodescanner.BarcodeCallback;
 import com.journeyapps.barcodescanner.BarcodeResult;
@@ -34,6 +34,7 @@ public class home_patanahi extends AppCompatActivity {
             return;
         }
 
+        // Request camera permission if not granted
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
         } else {
@@ -54,9 +55,17 @@ public class home_patanahi extends AppCompatActivity {
         public void barcodeResult(BarcodeResult result) {
             if (result.getText() != null) {
                 String qrData = result.getText();
-                Intent intent = new Intent(home_patanahi.this, opener.class);
-                intent.putExtra("qrData", qrData);
-                startActivity(intent);
+
+                // Create the fragment and pass the QR code data
+                my_device fragment = new my_device();
+                Bundle args = new Bundle();
+                args.putString("qrData", qrData); // Pass the scanned QR data
+                fragment.setArguments(args);
+
+                // Use FragmentTransaction to display the fragment
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.open_screen, fragment); // replace with your fragment container ID
+                transaction.commit();
             }
         }
 

@@ -11,6 +11,12 @@
         android:icon="@drawable/my_device">
     </item>
 
+    <item
+        android:id="@+id/scanner"
+        android:title=""
+        android:icon="@drawable/plus"
+        />
+
     <item android:id="@+id/other_device"
         android:title="Other Device"
         android:icon="@drawable/other_device">

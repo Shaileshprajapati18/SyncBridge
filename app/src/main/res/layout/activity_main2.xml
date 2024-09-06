@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fitsSystemWindows="true"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -15,77 +16,54 @@
         android:visibility="invisible"
         android:text="NO FILES FOUND"/>
 
-    <TextView
+    <LinearLayout
         android:id="@+id/title_storage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Storage"
-        android:textSize="24sp"
-        android:textColor="#FFFFFF"
         android:layout_margin="20dp"
-        />
-
-    <LinearLayout
-        android:id="@+id/header_title"
-        android:layout_below="@id/title_storage"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:weightSum="2"
         android:orientation="horizontal">
 
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="25dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/arrow_back"/>
         <TextView
-            android:id="@+id/type"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Type"
-            android:layout_marginStart="20dp"
-            android:textSize="14sp"
-            android:layout_weight="1"
+            android:text="Storage"
+            android:layout_marginStart="10dp"
+            android:textSize="24sp"
             android:textColor="#FFFFFF"
             />
 
-        <!-- RelativeLayout to contain both text and image -->
-        <RelativeLayout
-            android:id="@+id/more"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginEnd="20dp"
-            android:gravity="end">
-
-            <TextView
-                android:id="@+id/more_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="More"
-                android:textSize="14sp"
-                android:textColor="#FFFFFF"
-                android:layout_toLeftOf="@id/more_image"
-                android:layout_centerVertical="true"/>
-
-            <ImageView
-                android:id="@+id/more_image"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:src="@drawable/more"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                />
-        </RelativeLayout>
-
     </LinearLayout>
+
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:id="@+id/show_heading"
+        android:layout_below="@+id/title_storage"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/header_title"
         android:orientation="vertical">
 
+
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/my_folder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="10dp"
+        android:textSize="22dp"
+        android:textColor="@color/white"
+        android:layout_below="@id/show_heading"
+        android:text="My Folder"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_below="@id/header_title"
+        android:layout_below="@id/my_folder"
         android:layout_height="wrap_content"
         tools:listitem="@layout/show_folder"
         android:id="@+id/recycler_view"/>
