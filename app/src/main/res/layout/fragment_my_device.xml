@@ -5,20 +5,6 @@
     android:fitsSystemWindows="true"
     android:background="@color/black">
 
-    <EditText
-        android:id="@+id/qrCodeTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Scanned QR Code Data"
-        android:inputType="text"
-        android:focusable="false"
-        android:visibility="gone"
-        android:clickable="false"
-        android:cursorVisible="false"
-        android:longClickable="false"
-        android:padding="16dp"
-        android:gravity="center_vertical"/>
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

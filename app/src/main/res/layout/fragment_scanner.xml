@@ -1,15 +1,63 @@
-<!-- activity_main.xml -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:background="@color/black"
+    android:padding="16dp">
 
     <com.journeyapps.barcodescanner.CompoundBarcodeView
         android:id="@+id/barcode_scanner"
-        android:layout_width="260dp"
-        android:layout_height="260dp"
-        android:layout_marginTop="30dp"
-        android:layout_gravity="center_horizontal"
-        android:visibility="visible"/>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:padding="1dp"
+        android:background="@color/white"
+        android:layout_above="@+id/button_layout"
+        android:layout_margin="10dp"
+        android:visibility="visible" />
 
-</LinearLayout>
+    <View
+        android:layout_width="270dp"
+        android:layout_height="270dp"
+        android:layout_marginTop="207dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/scanner_overlay"/>
+
+    <LinearLayout
+        android:id="@+id/button_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:padding="5dp"
+        android:orientation="horizontal">
+
+        <!-- Flash toggle button aligned to start -->
+        <ImageButton
+            android:id="@+id/flash_toggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/flash_off"
+            android:layout_marginStart="10dp"
+            android:padding="10dp"
+            android:background="@drawable/rounded_button_background"
+            android:contentDescription="Toggle Flash" />
+
+        <!-- Adding weight to push the gallery button to the end -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1" />
+
+        <!-- Gallery button aligned to end -->
+        <ImageButton
+            android:id="@+id/gallery_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/gallery_icon"
+            android:layout_marginEnd="10dp"
+            android:padding="10dp"
+            android:background="@drawable/rounded_button_background"
+            android:contentDescription="Open Gallery" />
+
+    </LinearLayout>
+
+</RelativeLayout>

@@ -6,10 +6,17 @@
     android:gravity="center"
     tools:context=".my_device">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/qrCodeTextView"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="30dp"
-        android:text="other device" />
+        android:hint="Scanned QR Code Data"
+        android:inputType="text"
+        android:focusable="false"
+        android:clickable="false"
+        android:cursorVisible="false"
+        android:longClickable="false"
+        android:padding="16dp"
+        android:gravity="center_vertical"/>
 
 </RelativeLayout>

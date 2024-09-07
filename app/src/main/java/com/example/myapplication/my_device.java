@@ -25,7 +25,6 @@ public class my_device extends Fragment {
 
     RecyclerView recyclerView;
     TextView noFilesTextView;
-    TextView qrCodeTextView;
 
     private String qrData; // Variable to store the QR code data
 
@@ -36,18 +35,6 @@ public class my_device extends Fragment {
 
         recyclerView = view.findViewById(R.id.recycler_view);
         noFilesTextView = view.findViewById(R.id.nofiles_textview);
-        qrCodeTextView = view.findViewById(R.id.qrCodeTextView); // Link the TextView
-
-        if (getArguments() != null) {
-            qrData = getArguments().getString("qrData");
-        }
-
-        // Display the QR code data if available
-        if (qrData != null) {
-            qrCodeTextView.setText(qrData);
-        } else {
-            qrCodeTextView.setText("No QR Code data available.");
-        }
 
         if (checkPermission()) {
             displayFiles();
