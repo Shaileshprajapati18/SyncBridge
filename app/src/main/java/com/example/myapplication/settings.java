@@ -1,18 +1,24 @@
 package com.example.myapplication;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.util.Log;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class settings extends Fragment {
 
     // Declare the TextView
     TextView view_details;
+    LinearLayout sendMessageTextView,about_us,faqs;
 
     public settings() {
         // Required empty public constructor
@@ -41,8 +47,50 @@ public class settings extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
-        // Initialize the TextView by finding its ID in the inflated view
         view_details = view.findViewById(R.id.full_details);
+        about_us = view.findViewById(R.id.about_us);
+        sendMessageTextView = view.findViewById(R.id.send_message_textview);
+        faqs = view.findViewById(R.id.faqs);
+
+
+        about_us.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(getActivity(),About_us.class);
+                startActivity(intent);
+            }
+        });
+        sendMessageTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendEmail();
+            }
+
+            private void sendEmail() {
+                String[] recipients = new String[]{"purohitvinayak48@gmail.com"};  // Replace with your email
+                String subject = "Message Subject";
+                String message = "Hello, I would like to inquire about...";
+
+                Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", recipients[0], null));
+                emailIntent.putExtra(Intent.EXTRA_EMAIL, recipients);
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
+                emailIntent.putExtra(Intent.EXTRA_TEXT, message);
+
+                try {
+                    startActivity(Intent.createChooser(emailIntent, "Send email..."));
+                } catch (android.content.ActivityNotFoundException ex) {
+                    Toast.makeText(getActivity(), "No email clients installed.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        faqs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(getActivity(),faqs.class);
+                startActivity(intent);
+            }
+        });
 
         if (view_details != null) {
             // Set an OnClickListener to the TextView

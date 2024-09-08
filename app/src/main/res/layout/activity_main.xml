@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:background="#282525"
+    android:background="@color/black"
     tools:context=".MainActivity">
 
     <androidx.cardview.widget.CardView
@@ -23,12 +23,12 @@
             android:orientation="vertical"
             android:layout_gravity="center_horizontal"
             android:padding="24dp"
-            android:background="#9E9D9D">
+            android:background="@color/yellow">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Login"
+                android:text="LOGIN"
                 android:id="@+id/loginText"
                 android:textSize="36sp"
                 android:textAlignment="center"
@@ -44,7 +44,9 @@
                 android:padding="8dp"
                 android:hint="Email"
                 android:drawableLeft="@drawable/baseline_email_24"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
+                android:inputType="textEmailAddress"
+                android:textColorHint="@color/white"
                 android:drawablePadding="8dp"/>
 
             <EditText
@@ -56,8 +58,9 @@
                 android:inputType="textPassword"
                 android:padding="8dp"
                 android:hint="Password"
+                android:textColorHint="@color/white"
                 android:drawableLeft="@drawable/baseline_lock_24"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:drawablePadding="8dp"/>
 
             <Button
@@ -65,10 +68,11 @@
                 android:layout_height="60dp"
                 android:text="Login"
                 android:id="@+id/loginButton"
-                android:textSize="18sp"
-                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
                 android:layout_marginTop="30dp"
-                android:backgroundTint="@color/black"
+                android:backgroundTint="@color/white"
                 app:cornerRadius = "20dp"/>
 
 

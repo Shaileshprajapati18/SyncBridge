@@ -17,7 +17,7 @@ public class other_device extends Fragment {
         // Required empty public constructor
     }
 
-    public static other_device newInstance(String param1, String param2) {
+    public static other_device newInstance() {
         other_device fragment = new other_device();
         Bundle args = new Bundle();
         fragment.setArguments(args);

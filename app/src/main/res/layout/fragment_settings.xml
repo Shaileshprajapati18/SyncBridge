@@ -228,6 +228,7 @@
             android:layout_margin="10dp"
             android:orientation="vertical">
             <LinearLayout
+                android:id="@+id/send_message_textview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
@@ -258,6 +259,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/about_us"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
@@ -291,6 +293,7 @@
 
 
             <LinearLayout
+                android:id="@+id/faqs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp"

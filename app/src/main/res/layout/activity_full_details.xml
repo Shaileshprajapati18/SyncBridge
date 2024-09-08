@@ -38,18 +38,13 @@
     </com.google.android.material.bottomappbar.BottomAppBar>
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/black"
-        android:layout_below="@id/title"
-        android:orientation="vertical">
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:background="@drawable/inner_button_background"
             android:orientation="vertical"
+            android:layout_below="@id/title"
+            android:backgroundTint="@color/black"
             android:padding="10dp">
 
             <com.google.android.material.card.MaterialCardView
@@ -76,6 +71,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:layout_marginTop="20dp"
                 android:padding="8dp">
 
                 <LinearLayout
@@ -93,8 +89,8 @@
                         android:text="First name"
                         android:padding="5dp"
                         android:textColor="@android:color/white"
-                        android:textSize="23sp"
-                        android:textStyle="bold" />
+                        android:textSize="20sp"
+                         />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -106,8 +102,8 @@
                         android:padding="5dp"
                         android:text="Last name"
                         android:textColor="@android:color/white"
-                        android:textSize="23sp"
-                        android:textStyle="bold" />
+                        android:textSize="20sp"
+                       />
 
                 </LinearLayout>
 
@@ -148,9 +144,10 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:layout_marginTop="10dp"
                 android:padding="10dp">
 
                 <TextView
@@ -159,10 +156,10 @@
                     android:elevation="10dp"
                     android:background="@drawable/name_overlay"
                     android:padding="5dp"
-                    android:text="Mobile number : "
+                    android:text="Mobile number"
                     android:textColor="@android:color/white"
-                    android:textSize="23sp"
-                    android:textStyle="bold" />
+                    android:textSize="20sp"
+               />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -170,6 +167,7 @@
                     android:elevation="10dp"
                     android:layout_marginTop="5dp"
                     android:maxLines="2"
+                    android:textStyle="bold"
                     android:background="@drawable/name_overlay"
                     android:padding="5dp"
                     android:text="+919316452822"
@@ -180,9 +178,10 @@
 
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:layout_marginTop="10dp"
                 android:padding="10dp">
 
                 <TextView
@@ -193,8 +192,8 @@
                     android:background="@drawable/name_overlay"
                     android:padding="5dp"
                     android:textColor="@android:color/white"
-                    android:textSize="23sp"
-                    android:textStyle="bold" />
+                    android:textSize="20sp"
+                   />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -204,6 +203,7 @@
                     android:layout_marginTop="5dp"
                     android:background="@drawable/name_overlay"
                     android:padding="5dp"
+                    android:textStyle="bold"
                     android:text="Shailesh1125@gmail.com"
                     android:textColor="@android:color/white"
                     android:textSize="23sp" />
@@ -214,6 +214,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:layout_marginTop="10dp"
                 android:padding="10dp">
 
                 <TextView
@@ -225,8 +226,8 @@
                     android:padding="5dp"
                     android:text="Password"
                     android:textColor="@android:color/white"
-                    android:textSize="23sp"
-                    android:textStyle="bold" />
+                    android:textSize="20sp"
+                    />
 
 
                 <LinearLayout
@@ -245,6 +246,7 @@
                         android:password="true"
                         android:background="@drawable/name_overlay"
                         android:padding="5dp"
+                        android:textStyle="bold"
                         android:text="123456"
                         android:layout_marginEnd="10dp"
                         android:textColor="@android:color/white"
@@ -264,6 +266,5 @@
             </LinearLayout>
 
         </LinearLayout>
-    </LinearLayout>
 
 </RelativeLayout>

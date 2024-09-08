@@ -36,25 +36,25 @@ public class home extends Fragment {
         viewDetailButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Create an instance of my_device fragment
+
                 Fragment myDeviceFragment = new my_device();
 
                 // Replace the current fragment with my_device fragment
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.open_screen, myDeviceFragment); // Replace the fragment
-                transaction.addToBackStack(null); // Add to backstack to enable the user to go back
+                transaction.replace(R.id.open_screen, myDeviceFragment);
+                transaction.addToBackStack(null);
                 transaction.commit();
 
                 // Change the icon color in BottomNavigationView
                 BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.bottom_navigation);
-                bottomNavigationView.getMenu().findItem(R.id.my_device).setChecked(true); // Select the my_device menu item
+                bottomNavigationView.getMenu().findItem(R.id.my_device).setChecked(true);
             }
         });
 
         // Fetch and display the storage information
         TextView storageTextView = view.findViewById(R.id.storageTextView);
         ProgressBar storageProgressBar = view.findViewById(R.id.storageProgressBar);
-        TextView progressText = view.findViewById(R.id.progress_text); // TextView to show percentage
+        TextView progressText = view.findViewById(R.id.progress_text);
 
         // Get total storage including system files, apps, and user data
         long totalStorage = getTotalStorage();

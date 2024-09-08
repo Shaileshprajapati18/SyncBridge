@@ -32,9 +32,8 @@ public class open_screen extends AppCompatActivity {
 
         bottom_navigation = findViewById(R.id.bottom_navigation);
 
-        // Set the initial fragment
         if (savedInstanceState == null) {
-            navigateToFragment(home, R.id.home_icon);  // Default to home fragment
+            navigateToFragment(home, R.id.home_icon);  // Load the home fragment initially
         } else {
             currentFragment = getSupportFragmentManager().findFragmentById(R.id.open_screen);
         }
@@ -72,12 +71,18 @@ public class open_screen extends AppCompatActivity {
 
     // Method to navigate to fragments and update BottomNavigationView selection
     private void navigateToFragment(Fragment fragment, int menuItemId) {
+        // Avoid reloading the same fragment
         if (currentFragment != fragment) {
             currentFragment = fragment;
 
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.open_screen, fragment);
-            transaction.addToBackStack(null);  // Add to back stack for back navigation
+
+            // Only add non-home fragments to the back stack
+            if (!(fragment instanceof home)) {
+                transaction.addToBackStack(null);
+            }
+
             transaction.commit();
 
             // Immediately set the selected item
@@ -88,18 +93,22 @@ public class open_screen extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment current = fragmentManager.findFragmentById(R.id.open_screen);
 
-        if (current instanceof home) {
-            showExitConfirmationDialog();
-        } else if (fragmentManager.getBackStackEntryCount() > 0) {
+        // If there are fragments in the back stack, pop the last one
+        if (fragmentManager.getBackStackEntryCount() > 0) {
             fragmentManager.popBackStack();
-
         } else {
-            showExitConfirmationDialog();
+            // If no fragments are in the back stack, and the current fragment is home, show exit confirmation
+            Fragment current = fragmentManager.findFragmentById(R.id.open_screen);
+            if (current instanceof home) {
+                showExitConfirmationDialog();
+            } else {
+                super.onBackPressed();
+            }
         }
     }
 
+    // Method to update BottomNavigationView selection based on the current fragment
     private void updateBottomNavigationViewSelection() {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.open_screen);
 
@@ -138,6 +147,7 @@ public class open_screen extends AppCompatActivity {
             }
         });
 
+        // Set the negative button click listener
         negativeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
