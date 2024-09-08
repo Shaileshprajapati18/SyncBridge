@@ -28,7 +28,6 @@ import com.google.zxing.common.HybridBinarizer;
 import com.journeyapps.barcodescanner.BarcodeCallback;
 import com.journeyapps.barcodescanner.BarcodeResult;
 import com.journeyapps.barcodescanner.CompoundBarcodeView;
-import com.journeyapps.barcodescanner.camera.CameraSettings;
 
 import java.io.InputStream;
 import java.util.List;
@@ -41,6 +40,7 @@ public class scanner extends Fragment {
     private ImageButton galleryButton;
     private ImageButton flashToggleButton;
     private boolean isFlashOn = false;
+    private boolean isQrProcessed = false;  // Prevents multiple transitions
 
     public scanner() {
         // Required empty public constructor
@@ -58,12 +58,6 @@ public class scanner extends Fragment {
         barcodeScannerView.getStatusView().setVisibility(View.GONE);
 
         startScanning();
-
-
-        if (barcodeScannerView == null) {
-            Toast.makeText(getActivity(), "Barcode scanner view is not initialized", Toast.LENGTH_SHORT).show();
-            return view;
-        }
 
         // Request camera permission if not granted
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -106,24 +100,17 @@ public class scanner extends Fragment {
         }
     }
 
-
-
     private final BarcodeCallback callback = new BarcodeCallback() {
         @Override
         public void barcodeResult(BarcodeResult result) {
-            if (result.getText() != null) {
+            if (result.getText() != null && !isQrProcessed) {
+                isQrProcessed = true;  // Ensure transition only happens once
                 String qrData = result.getText();
 
-                // Create the fragment and pass the QR code data
-                other_device fragment = new other_device();
-                Bundle args = new Bundle();
-                args.putString("qrData", qrData); // Pass the scanned QR data
-                fragment.setArguments(args);
+                // Directly open other_device fragment with QR code data
+                openOtherDeviceFragment(qrData);
 
-                // Use FragmentTransaction to display the fragment
-                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                transaction.replace(R.id.open_screen, fragment); // replace with your fragment container ID
-                transaction.commit();
+                barcodeScannerView.pause();  // Stop scanning once QR code is processed
             }
         }
 
@@ -132,9 +119,23 @@ public class scanner extends Fragment {
         }
     };
 
+    private void openOtherDeviceFragment(String qrData) {
+        // Create the fragment and pass the QR code data
+        other_device fragment = new other_device();
+        Bundle args = new Bundle();
+        args.putString("qrData", qrData); // Pass the scanned QR data
+        fragment.setArguments(args);
+
+        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+        transaction.replace(R.id.open_screen, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
     @Override
     public void onResume() {
         super.onResume();
+        isQrProcessed = false;
         if (barcodeScannerView != null) {
             barcodeScannerView.resume();
         }
@@ -174,16 +175,7 @@ public class scanner extends Fragment {
 
                     if (result != null && result.getText() != null) {
                         String qrData = result.getText();
-
-                        // Create the fragment and pass the QR code data
-                        other_device fragment = new other_device();
-                        Bundle args = new Bundle();
-                        args.putString("qrData", qrData);
-                        fragment.setArguments(args);
-
-                        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                        transaction.replace(R.id.open_screen, fragment);
-                        transaction.commit();
+                        openOtherDeviceFragment(qrData);  // Directly open fragment with data
                     } else {
                         Toast.makeText(getActivity(), "No QR code found in the image", Toast.LENGTH_SHORT).show();
                     }

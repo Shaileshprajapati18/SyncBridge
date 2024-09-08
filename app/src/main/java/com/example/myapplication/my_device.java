@@ -26,8 +26,6 @@ public class my_device extends Fragment {
     RecyclerView recyclerView;
     TextView noFilesTextView;
 
-    private String qrData; // Variable to store the QR code data
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

@@ -28,14 +28,14 @@ public class other_device extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            qrData = getArguments().getString("qrData"); // Retrieve the passed QR code data
+            qrData = getArguments().getString("qrData");
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         View view = inflater.inflate(R.layout.fragment_other_device, container, false);
 
         // Link the TextView

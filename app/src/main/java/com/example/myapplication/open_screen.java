@@ -1,6 +1,5 @@
 package com.example.myapplication;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -89,10 +88,13 @@ public class open_screen extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         FragmentManager fragmentManager = getSupportFragmentManager();
-        if (fragmentManager.getBackStackEntryCount() > 1) {
+        Fragment current = fragmentManager.findFragmentById(R.id.open_screen);
+
+        if (current instanceof home) {
+            showExitConfirmationDialog();
+        } else if (fragmentManager.getBackStackEntryCount() > 0) {
             fragmentManager.popBackStack();
 
-            // BottomNavigationView selection is now updated in OnBackStackChangedListener
         } else {
             showExitConfirmationDialog();
         }
@@ -136,16 +138,13 @@ public class open_screen extends AppCompatActivity {
             }
         });
 
-        // Set the negative button click listener
         negativeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.dismiss();  // Dismiss the dialog and stay in the app
+                dialog.dismiss();
             }
         });
 
-        // Show the dialog
         dialog.show();
     }
-
 }

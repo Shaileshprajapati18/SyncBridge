@@ -1,8 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/black"
-    android:padding="16dp">
+    tools:context=".scanner">
+
+    <com.google.android.material.bottomappbar.BottomAppBar
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        app:fabCradleMargin="10dp"
+        app:fabCradleRoundedCornerRadius="10dp"
+        app:fabCradleVerticalOffset="10dp"
+        app:backgroundTint="@color/yellow"
+        app:actionMenuTextColor="@color/white">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Scan QR code"
+            android:textStyle="bold"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:fontFamily="@font/star"/>
+
+    </com.google.android.material.bottomappbar.BottomAppBar>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black"
+        android:layout_below="@+id/title"
+        android:padding="16dp">
 
     <com.journeyapps.barcodescanner.CompoundBarcodeView
         android:id="@+id/barcode_scanner"
@@ -18,7 +51,7 @@
     <View
         android:layout_width="270dp"
         android:layout_height="270dp"
-        android:layout_marginTop="207dp"
+        android:layout_marginTop="181dp"
         android:layout_centerHorizontal="true"
         android:background="@drawable/scanner_overlay"/>
 
@@ -60,4 +93,5 @@
 
     </LinearLayout>
 
+</RelativeLayout>
 </RelativeLayout>
