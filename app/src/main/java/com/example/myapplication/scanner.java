@@ -40,7 +40,7 @@ public class scanner extends Fragment {
     private ImageButton galleryButton;
     private ImageButton flashToggleButton;
     private boolean isFlashOn = false;
-    private boolean isQrProcessed = false;  // Prevents multiple transitions
+    private boolean isQrProcessed = false;
 
     public scanner() {
         // Required empty public constructor
@@ -59,17 +59,14 @@ public class scanner extends Fragment {
 
         startScanning();
 
-        // Request camera permission if not granted
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
         } else {
             startScanning();
         }
 
-        // Set up click listener for the gallery button
         galleryButton.setOnClickListener(v -> openGallery());
 
-        // Set up click listener for the flash toggle button
         flashToggleButton.setOnClickListener(v -> toggleFlash());
 
         return view;
@@ -175,7 +172,7 @@ public class scanner extends Fragment {
 
                     if (result != null && result.getText() != null) {
                         String qrData = result.getText();
-                        openOtherDeviceFragment(qrData);  // Directly open fragment with data
+                        openOtherDeviceFragment(qrData);
                     } else {
                         Toast.makeText(getActivity(), "No QR code found in the image", Toast.LENGTH_SHORT).show();
                     }

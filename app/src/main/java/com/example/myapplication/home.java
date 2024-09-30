@@ -45,7 +45,6 @@ public class home extends Fragment {
                 transaction.addToBackStack(null);
                 transaction.commit();
 
-                // Change the icon color in BottomNavigationView
                 BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.bottom_navigation);
                 bottomNavigationView.getMenu().findItem(R.id.my_device).setChecked(true);
             }

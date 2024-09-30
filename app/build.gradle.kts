@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -37,12 +38,16 @@ dependencies {
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
+    implementation(libs.firebase.auth)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
-    implementation("com.google.zxing:core:3.4.1")
-    implementation ("com.google.firebase:firebase-database:20.1.0")
-    implementation ("org.nanohttpd:nanohttpd:2.3.1")
+    implementation(libs.zxing.android.embedded)
+    implementation(libs.core)
+    implementation (libs.firebase.database)
+    implementation (libs.nanohttpd)
+    implementation(libs.play.services.auth)
+    implementation (libs.firebase.bom)
+
 
 }

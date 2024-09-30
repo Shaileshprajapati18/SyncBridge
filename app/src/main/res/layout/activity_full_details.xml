@@ -37,14 +37,18 @@
 
     </com.google.android.material.bottomappbar.BottomAppBar>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/title"
+        android:background="@color/black"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/inner_button_background"
             android:orientation="vertical"
-            android:layout_below="@id/title"
-            android:backgroundTint="@color/black"
+            android:layout_margin="15dp"
             android:padding="10dp">
 
             <com.google.android.material.card.MaterialCardView
@@ -66,7 +70,6 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -78,18 +81,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:padding="5dp"
                     android:weightSum="2">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:background="@drawable/name_overlay"
                         android:elevation="5dp"
                         android:text="First name"
-                        android:padding="5dp"
-                        android:textColor="@android:color/white"
-                        android:textSize="20sp"
+                        android:textColor="@color/grey"
+                        android:textSize="15sp"
                          />
 
                     <TextView
@@ -97,12 +99,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
                         android:layout_weight="1"
-                        android:background="@drawable/name_overlay"
                         android:elevation="10dp"
-                        android:padding="5dp"
                         android:text="Last name"
                         android:textColor="@android:color/white"
-                        android:textSize="20sp"
+                        android:textSize="15sp"
                        />
 
                 </LinearLayout>
@@ -110,7 +110,6 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
                     android:orientation="horizontal"
                     android:weightSum="2">
 
@@ -122,8 +121,9 @@
                         android:elevation="10dp"
                         android:text="Shailesh"
                         android:padding="5dp"
+                        android:paddingStart="10dp"
                         android:textColor="@android:color/white"
-                        android:textSize="23sp"
+                        android:textSize="20sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -133,6 +133,7 @@
                         android:layout_weight="1"
                         android:background="@drawable/name_overlay"
                         android:elevation="10dp"
+                        android:paddingStart="10dp"
                         android:padding="5dp"
                         android:text="Prajapati"
                         android:textColor="@android:color/white"
@@ -147,18 +148,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginTop="10dp"
                 android:padding="10dp">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:elevation="10dp"
-                    android:background="@drawable/name_overlay"
                     android:padding="5dp"
                     android:text="Mobile number"
                     android:textColor="@android:color/white"
-                    android:textSize="20sp"
+                    android:textSize="15sp"
                />
 
                 <TextView
@@ -181,7 +180,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginTop="10dp"
                 android:padding="10dp">
 
                 <TextView
@@ -189,10 +187,9 @@
                     android:layout_height="wrap_content"
                     android:elevation="10dp"
                     android:text="E-mail"
-                    android:background="@drawable/name_overlay"
                     android:padding="5dp"
                     android:textColor="@android:color/white"
-                    android:textSize="20sp"
+                    android:textSize="15sp"
                    />
 
                 <TextView
@@ -214,7 +211,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginTop="10dp"
                 android:padding="10dp">
 
                 <TextView
@@ -222,11 +218,10 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:elevation="10dp"
-                    android:background="@drawable/name_overlay"
                     android:padding="5dp"
                     android:text="Password"
                     android:textColor="@android:color/white"
-                    android:textSize="20sp"
+                    android:textSize="15sp"
                     />
 
 
@@ -266,5 +261,7 @@
             </LinearLayout>
 
         </LinearLayout>
+
+    </LinearLayout>
 
 </RelativeLayout>

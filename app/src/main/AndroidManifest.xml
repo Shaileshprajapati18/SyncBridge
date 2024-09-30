@@ -9,6 +9,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+
+
     <uses-permission
         android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
@@ -24,6 +26,9 @@
         android:theme="@style/Theme.MyApplication"
         tools:targetApi="31">
         <activity
+            android:name=".other_device_show_folder"
+            android:exported="false" />
+        <activity
             android:name=".faqs"
             android:exported="false" />
         <activity
@@ -31,9 +36,6 @@
             android:exported="false" />
         <activity
             android:name=".full_details"
-            android:exported="false" />
-        <activity
-            android:name=".QrCodeActivity"
             android:exported="false" />
 
         <provider
@@ -47,7 +49,7 @@
         </provider>
 
         <activity
-            android:name=".open_screen"
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -77,7 +79,7 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".MainActivity"
+            android:name=".open_screen"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity

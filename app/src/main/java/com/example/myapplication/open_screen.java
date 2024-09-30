@@ -33,7 +33,7 @@ public class open_screen extends AppCompatActivity {
         bottom_navigation = findViewById(R.id.bottom_navigation);
 
         if (savedInstanceState == null) {
-            navigateToFragment(home, R.id.home_icon);  // Load the home fragment initially
+            navigateToFragment(home, R.id.home_icon);
         } else {
             currentFragment = getSupportFragmentManager().findFragmentById(R.id.open_screen);
         }
@@ -127,10 +127,9 @@ public class open_screen extends AppCompatActivity {
 
     // Method to show an AlertDialog when exiting the app
     private void showExitConfirmationDialog() {
-        // Inflate the custom layout
+
         View customDialogView = getLayoutInflater().inflate(R.layout.dialog_custom, null);
 
-        // Get references to the buttons in the custom layout
         Button positiveButton = customDialogView.findViewById(R.id.dialog_positive);
         Button negativeButton = customDialogView.findViewById(R.id.dialog_negative);
 
