@@ -85,7 +85,7 @@ public class myAdapter extends RecyclerView.Adapter<myAdapter.ViewHolder> {
 
     private void openFile(File file) {
         if (file.isDirectory()) {
-            Intent intent = new Intent(context, MainActivity2.class);
+            Intent intent = new Intent(context, storageViewer.class);
             intent.putExtra("path", file.getAbsolutePath());
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);

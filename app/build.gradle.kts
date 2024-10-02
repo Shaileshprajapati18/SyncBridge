@@ -48,6 +48,5 @@ dependencies {
     implementation (libs.nanohttpd)
     implementation(libs.play.services.auth)
     implementation (libs.firebase.bom)
-
-
+    implementation("com.hbb20:ccp:2.7.2")
 }

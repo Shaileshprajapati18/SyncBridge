@@ -37,8 +37,8 @@ public class other_device extends Fragment implements deviceAdapter.OnItemClickL
     private ProgressBar progressBar;
     private deviceAdapter adapter;
     private ArrayList<FileData> fileList = new ArrayList<>();
-    private String serverUrl = ""; // Server URL fetched from Firebase
-    private String currentPath = ""; // Track the current directory path
+    private String serverUrl = "";
+    private String currentPath = "";
 
     public other_device() {
         // Required empty public constructor
