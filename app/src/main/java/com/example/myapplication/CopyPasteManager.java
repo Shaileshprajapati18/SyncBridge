@@ -12,7 +12,7 @@ public class CopyPasteManager {
 
     public CopyPasteManager(Context context) {
         this.context = context;
-        this.handler = new Handler(); // Handler to interact with the UI thread
+        this.handler = new Handler();
     }
 
     public void startCopyPasteService() {

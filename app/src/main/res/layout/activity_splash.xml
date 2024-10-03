@@ -2,13 +2,35 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"> <!-- White background, like in your iOS code -->
+    android:background="#000000">
 
     <ImageView
         android:id="@+id/splash_logo"
         android:layout_width="200dp"
-        android:layout_height="wrap_content"
+        android:layout_height="200dp"
         android:layout_centerInParent="true"
-        android:src="@drawable/splash" /> <!-- Replace with your actual logo -->
+        android:src="@drawable/splash" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="SyncBridge"
+        android:textColor="@color/yellow"
+        android:textSize="30sp"
+        android:fontFamily="@font/star"
+        android:textAlignment="center"
+        android:textStyle="bold"
+        android:layout_marginTop="-30dp"
+        android:layout_below="@id/splash_logo"
+        />
+    <ProgressBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:indeterminateTint="@color/yellow"
+        android:max="100"
+        android:progress="50"
+        />
 
 </RelativeLayout>

@@ -17,11 +17,11 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class open_screen extends AppCompatActivity {
 
     BottomNavigationView bottom_navigation;
-    home home = new home();
-    my_device my_device = new my_device();
-    scanner scanner = new scanner();
-    other_device other_device = new other_device();
-    settings settings = new settings();
+    home homeFragment = new home();
+    my_device myDeviceFragment = new my_device();
+    scanner scannerFragment = new scanner();
+    other_device otherDeviceFragment = new other_device();
+    settings settingsFragment = new settings();
 
     private Fragment currentFragment;
 
@@ -33,7 +33,7 @@ public class open_screen extends AppCompatActivity {
         bottom_navigation = findViewById(R.id.bottom_navigation);
 
         if (savedInstanceState == null) {
-            navigateToFragment(home, R.id.home_icon);
+            navigateToFragment(homeFragment, R.id.home_icon);
         } else {
             currentFragment = getSupportFragmentManager().findFragmentById(R.id.open_screen);
         }
@@ -44,18 +44,19 @@ public class open_screen extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int itemId = item.getItemId();
 
-                // Set the fragment based on the selected item
+                // Using if-else to set the fragment based on the selected item
                 if (itemId == R.id.home_icon) {
-                    navigateToFragment(home, itemId);
+                    navigateToFragment(homeFragment, itemId);
                 } else if (itemId == R.id.my_device) {
-                    navigateToFragment(my_device, itemId);
+                    navigateToFragment(myDeviceFragment, itemId);
                 } else if (itemId == R.id.scanner) {
-                    navigateToFragment(scanner, itemId);
+                    navigateToFragment(scannerFragment, itemId);
                 } else if (itemId == R.id.other_device) {
-                    navigateToFragment(other_device, itemId);
+                    navigateToFragment(otherDeviceFragment, itemId);
                 } else if (itemId == R.id.settings) {
-                    navigateToFragment(settings, itemId);
+                    navigateToFragment(settingsFragment, itemId);
                 }
+
                 return true;
             }
         });
@@ -76,11 +77,19 @@ public class open_screen extends AppCompatActivity {
             currentFragment = fragment;
 
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.open_screen, fragment);
 
-            // Only add non-home fragments to the back stack
-            if (!(fragment instanceof home)) {
-                transaction.addToBackStack(null);
+            // Check if the fragment is already added
+            if (fragment.isAdded()) {
+                // If the fragment is already added, just show it
+                transaction.show(fragment);
+            } else {
+                // If it's not added, replace it
+                transaction.replace(R.id.open_screen, fragment);
+
+                // Only add non-home fragments to the back stack
+                if (!(fragment instanceof home)) {
+                    transaction.addToBackStack(null);
+                }
             }
 
             transaction.commit();
@@ -93,17 +102,17 @@ public class open_screen extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment currentFragment = fragmentManager.findFragmentById(R.id.open_screen);
 
-        // If there are fragments in the back stack, pop the last one
-        if (fragmentManager.getBackStackEntryCount() > 0) {
-            fragmentManager.popBackStack();
+        // Check if the current fragment is the home fragment
+        if (currentFragment instanceof home) {
+            showExitConfirmationDialog(); // Show the exit confirmation dialog
         } else {
-            // If no fragments are in the back stack, and the current fragment is home, show exit confirmation
-            Fragment current = fragmentManager.findFragmentById(R.id.open_screen);
-            if (current instanceof home) {
-                showExitConfirmationDialog();
+            // Pop the last fragment from the back stack
+            if (fragmentManager.getBackStackEntryCount() > 0) {
+                fragmentManager.popBackStack();
             } else {
-                super.onBackPressed();
+                super.onBackPressed(); // Exit the app if no fragments in back stack
             }
         }
     }
@@ -127,7 +136,6 @@ public class open_screen extends AppCompatActivity {
 
     // Method to show an AlertDialog when exiting the app
     private void showExitConfirmationDialog() {
-
         View customDialogView = getLayoutInflater().inflate(R.layout.dialog_custom, null);
 
         Button positiveButton = customDialogView.findViewById(R.id.dialog_positive);
