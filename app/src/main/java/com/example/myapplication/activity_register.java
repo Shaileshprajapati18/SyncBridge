@@ -10,6 +10,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +31,8 @@ public class activity_register extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private CountryCodePicker countryCodePicker;
     DatabaseReference reference;
+    ProgressBar progressBar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,7 @@ public class activity_register extends AppCompatActivity {
         registerButton = findViewById(R.id.registerButton);
         loginRedirect = findViewById(R.id.loginRedirect);
         countryCodePicker = findViewById(R.id.countryCodePicker);
+        progressBar=findViewById(R.id.progressbar);
 
         // Set click listener for the register button
         registerButton.setOnClickListener(new View.OnClickListener() {
@@ -119,11 +123,15 @@ public class activity_register extends AppCompatActivity {
             return;
         }
 
+        progressBar.setVisibility(View.VISIBLE);
+
         // Register user with Firebase Auth
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        progressBar.setVisibility(View.GONE);
+
                         if (task.isSuccessful()) {
                             RegisterModel registerModel = new RegisterModel(firstName, lastName, fullPhoneNumber, email, password);
                             reference.child(email.replace(".", ",")).setValue(registerModel);

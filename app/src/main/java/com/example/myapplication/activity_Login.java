@@ -11,6 +11,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +28,7 @@ public class activity_Login extends AppCompatActivity {
     private TextView registerRedirect;
     private TextView forgotPasswordText;
     private FirebaseAuth mAuth;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,12 +53,14 @@ public class activity_Login extends AppCompatActivity {
         loginButton = findViewById(R.id.loginButton);
         registerRedirect = findViewById(R.id.registerRedirect);
         forgotPasswordText = findViewById(R.id.forgotPasswordText);
+        progressBar=findViewById(R.id.progressbar);
 
         // Set click listener for the login button
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 loginUser();
+
             }
         });
 
@@ -79,6 +83,7 @@ public class activity_Login extends AppCompatActivity {
     }
 
     private void loginUser() {
+
         String email = emailField.getText().toString().trim();
         String password = passwordField.getText().toString().trim();
 
@@ -98,12 +103,15 @@ public class activity_Login extends AppCompatActivity {
             passwordField.requestFocus();
             return;
         }
+        progressBar.setVisibility(View.VISIBLE);
 
-        // Authenticate user with Firebase
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+
+                        progressBar.setVisibility(View.GONE);
+
                         if (task.isSuccessful()) {
                             // Login successful, redirect to home screen
                             Intent intent = new Intent(activity_Login.this, open_screen.class);
@@ -115,7 +123,7 @@ public class activity_Login extends AppCompatActivity {
                         }
                     }
                 });
-    }
+        }
 
     private void showForgotPasswordDialog() {
         View customDialogView = getLayoutInflater().inflate(R.layout.dialog_forgot_password, null);
