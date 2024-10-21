@@ -2,24 +2,30 @@ package com.example.myapplication;
 
 public class FileData {
     private String name;
-    private boolean isDirectory;
+    private String path;
     private long size;
+    private boolean isDirectory;
 
-    public FileData(String name, boolean isDirectory, long size) {
+    public FileData(String name, String path, long size, boolean isDirectory) {
         this.name = name;
-        this.isDirectory = isDirectory;
+        this.path = path;
         this.size = size;
+        this.isDirectory = isDirectory;
     }
 
     public String getName() {
         return name;
     }
 
-    public boolean isDirectory() {
-        return isDirectory;
+    public String getPath() {
+        return path;
     }
 
     public long getSize() {
         return size;
+    }
+
+    public boolean isDirectory() {
+        return isDirectory;
     }
 }

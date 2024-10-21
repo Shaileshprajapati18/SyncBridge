@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Patterns;
@@ -135,6 +136,12 @@ public class activity_register extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             RegisterModel registerModel = new RegisterModel(firstName, lastName, fullPhoneNumber, email, password);
                             reference.child(email.replace(".", ",")).setValue(registerModel);
+
+                            SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", getApplicationContext().MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                            editor.putString("UserID", email.replace(".", ","));
+                            editor.apply();
 
                             Toast.makeText(activity_register.this, "Registration successful", Toast.LENGTH_SHORT).show();
 

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Patterns;
@@ -114,8 +115,15 @@ public class activity_Login extends AppCompatActivity {
 
                         if (task.isSuccessful()) {
                             // Login successful, redirect to home screen
+                            SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", getApplicationContext().MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                            editor.putString("UserID", email.replace(".", ","));
+                            editor.apply();
                             Intent intent = new Intent(activity_Login.this, open_screen.class);
                             startActivity(intent);
+
+
                             finish();
                         } else {
                             // Login failed

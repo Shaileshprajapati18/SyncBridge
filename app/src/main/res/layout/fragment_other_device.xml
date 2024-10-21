@@ -6,6 +6,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".other_device">
 
+    <TextView
+        android:id="@+id/tvNoDevice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="No Devices Connected"
+        android:textStyle="bold"
+        android:textSize="20dp"/>
+
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/title"
         android:layout_width="match_parent"

@@ -6,9 +6,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.os.Environment;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,11 +22,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class my_device extends Fragment {
 
     RecyclerView recyclerView;
     TextView noFilesTextView;
+    ProgressBar progressBar;
+
+    private ExecutorService executorService;
+    private Handler handler;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -33,6 +41,10 @@ public class my_device extends Fragment {
 
         recyclerView = view.findViewById(R.id.recycler_view);
         noFilesTextView = view.findViewById(R.id.nofiles_textview);
+        progressBar = view.findViewById(R.id.progressbar);
+
+        executorService = Executors.newSingleThreadExecutor();
+        handler = new Handler();
 
         if (checkPermission()) {
             displayFiles();
@@ -75,20 +87,36 @@ public class my_device extends Fragment {
     }
 
     private void displayFiles() {
-        String path = Environment.getExternalStorageDirectory().getPath();
-        File root = new File(path);
-        File[] files = root.listFiles();
+        // Show the progress bar before starting to load files
+        progressBar.setVisibility(View.VISIBLE);
 
-        if (files == null || files.length == 0) {
-            noFilesTextView.setVisibility(View.VISIBLE);
-            recyclerView.setVisibility(View.GONE);
-        } else {
-            noFilesTextView.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.VISIBLE);
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                String path = Environment.getExternalStorageDirectory().getPath();
+                File root = new File(path);
+                File[] files = root.listFiles();
 
-            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-            recyclerView.setAdapter(new myAdapter(getActivity(), files));
-        }
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Hide the progress bar when the files are loaded
+                        progressBar.setVisibility(View.GONE);
+
+                        if (files == null || files.length == 0) {
+                            noFilesTextView.setVisibility(View.VISIBLE);
+                            recyclerView.setVisibility(View.GONE);
+                        } else {
+                            noFilesTextView.setVisibility(View.GONE);
+                            recyclerView.setVisibility(View.VISIBLE);
+
+                            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                            recyclerView.setAdapter(new myAdapter(getActivity(), files));
+                        }
+                    }
+                });
+            }
+        });
     }
 
     @Override

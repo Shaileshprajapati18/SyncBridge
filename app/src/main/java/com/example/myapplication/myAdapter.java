@@ -193,7 +193,8 @@ public class myAdapter extends RecyclerView.Adapter<myAdapter.ViewHolder> {
                     File[] updatedFiles = newFile.getParentFile().listFiles(); // Get updated file list
                     if (updatedFiles != null) {
                         // Update the adapter's data
-                        setFiles(updatedFiles); // Update the files in the adapter
+                        setFiles(updatedFiles);
+                        notifyDataSetChanged();
                     }
                 } else {
                     Toast.makeText(context, "Failed to rename", Toast.LENGTH_SHORT).show();
@@ -203,8 +204,6 @@ public class myAdapter extends RecyclerView.Adapter<myAdapter.ViewHolder> {
         builder.setNegativeButton("Cancel", null);
         builder.show();
     }
-
-    // Paste file method
     // Prompt the user to paste the file
     private void promptPasteAction(int position) {
         if (fileToCopy == null) {
@@ -222,7 +221,6 @@ public class myAdapter extends RecyclerView.Adapter<myAdapter.ViewHolder> {
         builder.setNegativeButton("No", null);
         builder.show();
     }
-    // Paste file method
     // Paste file method
     private void pasteFile(File destinationFolder) {
         if (fileToCopy != null) {
@@ -408,7 +406,6 @@ public class myAdapter extends RecyclerView.Adapter<myAdapter.ViewHolder> {
             case "mp4":
                 mimeType = "video/mp4";
                 break;
-            // Add more file types as needed
         }
         return mimeType;
     }

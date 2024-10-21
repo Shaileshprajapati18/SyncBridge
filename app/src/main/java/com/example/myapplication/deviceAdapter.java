@@ -1,62 +1,65 @@
 package com.example.myapplication;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Stack;
 
 public class deviceAdapter extends RecyclerView.Adapter<deviceAdapter.ViewHolder> {
 
     private final Context context;
     private final List<FileData> files;
     private final OnItemClickListener onItemClickListener;
+    private final Stack<String> directoryStack = new Stack<>(); // Stack for directory management
 
     public interface OnItemClickListener {
         void onItemClick(FileData file);
+        void onDownload(FileData file);
+        void onBackPressed(); // Back press method
     }
 
-    public deviceAdapter(Context context, List<FileData> files, OnItemClickListener listener) {
+    public deviceAdapter(Context context, List<FileData> files, OnItemClickListener onItemClickListener) {
         this.context = context;
         this.files = files;
-        this.onItemClickListener = listener;
+        this.onItemClickListener = onItemClickListener;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.show_folder, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_file, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         FileData file = files.get(position);
-        holder.textView.setText(file.getName());
-
-        if (file.isDirectory()) {
-            holder.imageView.setImageResource(R.drawable.folder);
-            holder.fileSizeTextView.setText("Directory");
-        } else {
-            holder.imageView.setImageResource(R.drawable.file);
-            holder.fileSizeTextView.setText(getReadableFileSize(file.getSize()));
-        }
-
-        // Set click listener
-        holder.itemView.setOnClickListener(v -> {
-            if (onItemClickListener != null) {
-                onItemClickListener.onItemClick(file);
-            }
-        });
+        holder.bind(file);
     }
 
     @Override
@@ -64,22 +67,46 @@ public class deviceAdapter extends RecyclerView.Adapter<deviceAdapter.ViewHolder
         return files.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView textView, fileSizeTextView;
-        ImageView imageView;
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        public ViewHolder(View itemView) {
+        private final TextView fileName;
+        private final ImageView fileIcon;
+        private FileData file;
+
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            textView = itemView.findViewById(R.id.file_name_text_view);
-            fileSizeTextView = itemView.findViewById(R.id.file_size_text_view);
-            imageView = itemView.findViewById(R.id.icon_view);
+            fileName = itemView.findViewById(R.id.fileName);
+            fileIcon = itemView.findViewById(R.id.fileIcon);
+            itemView.setOnClickListener(this);
         }
-    }
 
-    private String getReadableFileSize(long size) {
-        if (size <= 0) return "0 bytes";
-        final String[] units = {"bytes", "KB", "MB", "GB", "TB"};
-        int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
-        return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+        void bind(FileData file) {
+            this.file = file;
+            fileName.setText(file.getName());
+            fileIcon.setImageResource(file.isDirectory() ? R.drawable.folder : R.drawable.file);
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (file.isDirectory()) {
+                onItemClickListener.onItemClick(file); // Handle directory navigation
+            } else {
+                // Show options for file (download or other options)
+                showPopupMenu(v);
+            }
+        }
+
+        private void showPopupMenu(View view) {
+            PopupMenu popupMenu = new PopupMenu(context, view);
+            popupMenu.getMenuInflater().inflate(R.menu.menu_file_options, popupMenu.getMenu());
+            popupMenu.setOnMenuItemClickListener(menuItem -> {
+                if (menuItem.getItemId() == R.id.action_download) {
+                    onItemClickListener.onDownload(file); // Download the file
+                    return true;
+                }
+                return false;
+            });
+            popupMenu.show();
+        }
     }
 }

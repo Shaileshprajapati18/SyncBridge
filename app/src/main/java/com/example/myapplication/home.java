@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,6 +46,7 @@ public class home extends Fragment {
 
         // TextView for username display
         TextView username = view.findViewById(R.id.username);
+        LinearLayout connect_device=view.findViewById(R.id.connect_device);
 
         // Fetch user details from Firebase
         reference.addValueEventListener(new ValueEventListener() {
@@ -80,6 +82,16 @@ public class home extends Fragment {
 
         // Button to navigate to my_device fragment
         Button viewDetailButton = view.findViewById(R.id.view_detail);
+        connect_device.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment scanner = new scanner();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.open_screen, scanner);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
         viewDetailButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

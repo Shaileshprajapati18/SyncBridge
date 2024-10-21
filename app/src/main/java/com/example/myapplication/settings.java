@@ -2,6 +2,7 @@ package com.example.myapplication;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.content.SharedPreferences;
 
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -32,7 +34,6 @@ public class settings extends Fragment {
     LinearLayout sendMessageTextView, about_us, faqs;
     FirebaseAuth mAuth;
     Switch copyPasteSwitch;
-    CopyPasteManager copyPasteManager; // Instance of the CopyPasteManager
 
     public settings() {
     }
@@ -49,7 +50,6 @@ public class settings extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            // Retrieve any arguments passed to the fragment, if needed
         }
     }
 
@@ -115,31 +115,22 @@ public class settings extends Fragment {
         // Initialize Firebase Authentication
         mAuth = FirebaseAuth.getInstance();
 
-        // Initialize the CopyPasteManager
-        copyPasteManager = new CopyPasteManager(getContext());
-
-        // Initialize SharedPreferences
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("settings", getContext().MODE_PRIVATE);
-        boolean isCopyPasteEnabled = sharedPreferences.getBoolean("copyPasteEnabled", true); // Default is true
-
-        // Set the switch to checked state based on saved preference
-        copyPasteSwitch.setChecked(isCopyPasteEnabled);
-        if (isCopyPasteEnabled) {
-            copyPasteManager.startCopyPasteService(); // Start the service if enabled
-        }
-
-        // Set listener for the copy-paste switch
-        copyPasteSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                // Start the copy-paste service (thread)
-                copyPasteManager.startCopyPasteService();
-            } else {
-                // Stop the copy-paste service (thread)
-                copyPasteManager.stopCopyPasteService();
+        copyPasteSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                        Toast.makeText(getContext(), "Enabled..", Toast.LENGTH_SHORT).show();
+                    } else {
+                        // Show toast if the Android version is 10 or higher
+                        copyPasteSwitch.setChecked(false); // Disable the switch
+                        Toast.makeText(getContext(), "Clipboard access is restricted in Android 10 and above.", Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
-            // Save the state of the switch
-            sharedPreferences.edit().putBoolean("copyPasteEnabled", isChecked).apply();
         });
+
+
 
         // Set OnClickListener for Logout
         Logout.setOnClickListener(new View.OnClickListener() {
@@ -243,6 +234,6 @@ public class settings extends Fragment {
             }
         });
 
-        dialog.show();  // Show the dialog
+        dialog.show();
     }
 }

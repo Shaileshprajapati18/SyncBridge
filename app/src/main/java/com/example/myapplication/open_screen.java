@@ -107,6 +107,8 @@ public class open_screen extends AppCompatActivity {
         // Check if the current fragment is the home fragment
         if (currentFragment instanceof home) {
             showExitConfirmationDialog(); // Show the exit confirmation dialog
+        } else if (currentFragment instanceof other_device) {
+            ((other_device) currentFragment).handleBackPress();
         } else {
             // Pop the last fragment from the back stack
             if (fragmentManager.getBackStackEntryCount() > 0) {
