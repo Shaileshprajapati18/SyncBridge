@@ -1,6 +1,4 @@
-package com.example.myapplication;
-
-import static android.content.Context.MODE_PRIVATE;
+package com.example.myapplication.Fragments;
 
 import android.Manifest;
 import android.content.DialogInterface;
@@ -29,8 +27,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.myapplication.R;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.zxing.BarcodeFormat;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.MultiFormatReader;
 import com.google.zxing.RGBLuminanceSource;
@@ -57,7 +55,7 @@ public class scanner extends Fragment {
     private boolean isQrProcessed = false;
 
     public scanner() {
-        // Required empty public constructor
+
     }
 
     @Override
@@ -103,9 +101,9 @@ public class scanner extends Fragment {
         if (barcodeScannerView != null) {
             isFlashOn = !isFlashOn;
             if (isFlashOn) {
-                barcodeScannerView.setTorchOn();  // Turn on the flash
+                barcodeScannerView.setTorchOn();
             } else {
-                barcodeScannerView.setTorchOff(); // Turn off the flash
+                barcodeScannerView.setTorchOff();
             }
             flashToggleButton.setImageResource(isFlashOn ? R.drawable.flash_on : R.drawable.flash_off);
         }

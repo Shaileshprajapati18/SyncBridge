@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.Fragments;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,7 +10,6 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +20,10 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myapplication.R;
+import com.example.myapplication.Adapters.myAdapter;
+import com.facebook.shimmer.ShimmerFrameLayout;
+
 import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -29,7 +32,7 @@ public class my_device extends Fragment {
 
     RecyclerView recyclerView;
     TextView noFilesTextView;
-    ProgressBar progressBar;
+    ShimmerFrameLayout shimmerFrameLayout;
 
     private ExecutorService executorService;
     private Handler handler;
@@ -41,7 +44,7 @@ public class my_device extends Fragment {
 
         recyclerView = view.findViewById(R.id.recycler_view);
         noFilesTextView = view.findViewById(R.id.nofiles_textview);
-        progressBar = view.findViewById(R.id.progressbar);
+        shimmerFrameLayout = view.findViewById(R.id.shmmerview);
 
         executorService = Executors.newSingleThreadExecutor();
         handler = new Handler();
@@ -78,17 +81,14 @@ public class my_device extends Fragment {
                 startActivityForResult(intent, 1);
             }
         } else {
-            // Request the legacy storage permissions for devices running Android 10 or lower
+
             ActivityCompat.requestPermissions(getActivity(), new String[]{
                     android.Manifest.permission.READ_EXTERNAL_STORAGE,
                     android.Manifest.permission.WRITE_EXTERNAL_STORAGE
             }, 1);
         }
     }
-
     private void displayFiles() {
-        // Show the progress bar before starting to load files
-        progressBar.setVisibility(View.VISIBLE);
 
         executorService.execute(new Runnable() {
             @Override
@@ -100,15 +100,14 @@ public class my_device extends Fragment {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        // Hide the progress bar when the files are loaded
-                        progressBar.setVisibility(View.GONE);
 
+                        shimmerFrameLayout.setVisibility(View.GONE);
                         if (files == null || files.length == 0) {
                             noFilesTextView.setVisibility(View.VISIBLE);
                             recyclerView.setVisibility(View.GONE);
                         } else {
                             noFilesTextView.setVisibility(View.GONE);
-                            recyclerView.setVisibility(View.VISIBLE);
+                           recyclerView.setVisibility(View.VISIBLE);
 
                             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                             recyclerView.setAdapter(new myAdapter(getActivity(), files));

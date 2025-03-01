@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/black"
-    tools:context=".settings">
+    android:background="@drawable/backgroung"
+    tools:context=".Fragments.settings">
 
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/title"
@@ -84,7 +84,7 @@
                     android:elevation="10dp"
                     android:layout_marginTop="2dp"
                     android:textSize="15sp"
-                    android:textColor="@color/dark_grey"
+                    android:textColor="@color/grey"
                     />
 
             </LinearLayout>
@@ -96,20 +96,20 @@
             android:layout_height="wrap_content"
             android:text="Profile Settings"
             android:textAlignment="center"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp"
-            android:textColor="@color/white"
-            android:padding="3dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:textColor="@color/black"
+            android:padding="8dp"
+            android:backgroundTint="@color/white"
             android:layout_marginBottom="10dp"
-            android:background="@drawable/scanner_overlay"
-            android:textStyle="bold"
-            android:textSize="18dp"
+            android:background="@drawable/rounded_grey_background"
+            android:textSize="16dp"
           />
 
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/inner_button_background"
+    android:background="@drawable/rounded_grey_background"
     android:layout_margin="10dp"
     android:orientation="vertical">
         <LinearLayout
@@ -226,7 +226,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/inner_button_background"
+            android:background="@drawable/rounded_grey_background"
             android:layout_margin="10dp"
             android:orientation="vertical">
             <LinearLayout
@@ -337,11 +337,17 @@
             android:text="Logout"
             android:textAlignment="center"
             android:layout_margin="10dp"
-            android:background="@drawable/inner_button_background"
+            android:background="@drawable/rounded_grey_background"
             android:textSize="18dp"
             android:textStyle="bold"
             android:textColor="@color/white"/>
 
+        <ImageView
+            android:layout_width="400dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:id="@+id/upgradenow"/>
 
     </LinearLayout>
 

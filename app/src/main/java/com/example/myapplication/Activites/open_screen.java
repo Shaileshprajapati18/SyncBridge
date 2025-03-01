@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.Activites;
 
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -12,6 +12,12 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.myapplication.Fragments.home;
+import com.example.myapplication.Fragments.my_device;
+import com.example.myapplication.Fragments.other_device;
+import com.example.myapplication.Fragments.scanner;
+import com.example.myapplication.Fragments.settings;
+import com.example.myapplication.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class open_screen extends AppCompatActivity {

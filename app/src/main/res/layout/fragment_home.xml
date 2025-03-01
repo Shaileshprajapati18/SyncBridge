@@ -5,16 +5,17 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/gradient_background">
+    android:background="@drawable/backgroung">
 
-    <com.google.android.material.bottomappbar.BottomAppBar
+    <Toolbar
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         app:fabCradleMargin="10dp"
+        android:elevation="20dp"
+        android:background="@color/yellow"
         app:fabCradleRoundedCornerRadius="10dp"
         app:fabCradleVerticalOffset="10dp"
-        app:backgroundTint="@color/yellow"
         app:actionMenuTextColor="@color/white">
 
         <TextView
@@ -29,68 +30,86 @@
 
         <ImageView
             android:id="@+id/end_card"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_alignParentEnd="true"
             android:elevation="10dp"
             android:layout_marginEnd="15dp"
             android:layout_gravity="end"
-            android:padding="1dp"
-            android:background="@drawable/button_background"
-            android:src="@drawable/ic_bell"
-            app:tint="@android:color/black" />
+            android:padding="0.1dp"
+            android:background="@drawable/rounded_card_background"
+            android:src="@drawable/botification"
+            app:tint="@android:color/white" />
 
 
-    </com.google.android.material.bottomappbar.BottomAppBar>
+    </Toolbar>
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/start_card"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        app:cardElevation="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="50dp"
-        app:cardCornerRadius="50dp">
 
-        <ImageView
-            android:id="@+id/profile"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:src="@drawable/profile" />
-    </com.google.android.material.card.MaterialCardView>
+    <ScrollView
+        android:layout_below="@id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/start_card"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="35dp"
         android:orientation="vertical">
-        <TextView
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Welcome,"
-            android:elevation="10dp"
-            android:textSize="15sp"
-            android:layout_marginTop="20dp"
-            android:textColor="@android:color/white"
-            />
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/username"
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/start_card"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Your Username"
-            android:elevation="10dp"
-            android:textSize="18sp"
-            android:textColor="@android:color/white"
-            android:textStyle="bold"
-            />
+            android:layout_alignParentStart="true"
+            app:cardElevation="10dp"
+            android:layout_marginStart="10dp"
+            app:cardCornerRadius="50dp">
 
-    </LinearLayout>
+            <ImageView
+                android:id="@+id/profile"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/profile" />
+        </com.google.android.material.card.MaterialCardView>
 
-    <LinearLayout
+        <LinearLayout
+            android:id="@+id/username2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/start_card"
+            android:layout_marginStart="10dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Welcome,"
+                android:elevation="10dp"
+                android:textSize="15sp"
+                android:textColor="@android:color/white"
+                />
+
+            <TextView
+                android:id="@+id/username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:elevation="10dp"
+                android:textSize="18sp"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                />
+
+        </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
         android:id="@+id/Txtmystorage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -118,7 +137,7 @@
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
-            android:layout_height="185dp"
+            android:layout_height="175dp"
             android:layout_margin="10dp"
             android:elevation="20dp"
             app:cardCornerRadius="20dp"
@@ -141,7 +160,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Internal storage"
-                        android:textSize="20sp"
+                        android:textSize="25sp"
                         android:textStyle="bold"
                         android:layout_marginStart="10dp"
                         android:layout_marginTop="10dp"
@@ -159,27 +178,36 @@
                         android:layout_marginTop="10dp"
                         android:textColor="@android:color/white" />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Available storage"
-                        android:textSize="15sp"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="10dp"
-                        android:textColor="@android:color/white" />
-
-                    <Button
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="View Details"
-                        android:id="@+id/view_detail"
-                        android:textSize="18sp"
-                        android:elevation="10dp"
-                        android:layout_marginStart="10dp"
-                        android:textColor="@color/black"
-                        android:layout_marginTop="10dp"
-                        android:backgroundTint="@color/yellow"
-                        app:cornerRadius = "10dp"/>
+                        android:orientation="horizontal"
+                        >
+
+                        <Button
+                            android:layout_width="190dp"
+                            android:layout_height="wrap_content"
+                            android:text="View Details"
+                            android:id="@+id/view_detail"
+                            android:textSize="18sp"
+                            android:gravity="start|center_vertical"
+                            android:textAlignment="textStart"
+                            android:elevation="10dp"
+                            android:layout_marginStart="10dp"
+                            android:textColor="@color/black"
+                            android:layout_marginTop="10dp"
+                            android:backgroundTint="@color/white"
+                            app:cornerRadius = "10dp"/>
+
+                        <ImageView
+                            android:id="@+id/sidearrow"
+                            android:layout_width="34dp"
+                            android:layout_height="34dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginStart="-55dp"
+                            android:src="@drawable/sidearrow"
+                            android:layout_gravity="center"/>
+                    </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
@@ -267,11 +295,10 @@
 
                 <ImageView
                     android:id="@+id/icon_card1"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    android:layout_width="54dp"
+                    android:layout_height="54dp"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/file_manager_icon"
-                    app:tint="@color/black"
+                    android:src="@drawable/laptop"
                     android:contentDescription="@string/file_manager_icon_desc"/>
 
                 <TextView
@@ -306,16 +333,16 @@
                         android:layout_height="wrap_content"
                         android:text="Used: 48.5 GB"
                         android:textSize="14sp"
-                        android:textColor="#B0C4DE"/>
+                        android:textColor="@color/white"/>
 
                     <TextView
-                        android:id="@+id/total_storage_card1"
+                        android:id="@+id/total_storage_card12"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end"
-                        android:text="128 GB"
+                        android:text=" of 128 GB"
                         android:textSize="14sp"
-                        android:textColor="#B0C4DE"/>
+                        android:textColor="@color/white"/>
                 </LinearLayout>
 
                 <Button
@@ -343,16 +370,15 @@
                 android:padding="16dp">
 
                 <ImageView
-                    android:id="@+id/icon_card2"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    android:id="@+id/icon_card12"
+                    android:layout_width="54dp"
+                    android:layout_height="54dp"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/file_manager_icon"
-                    app:tint="@color/black"
+                    android:src="@drawable/laptop"
                     android:contentDescription="@string/file_manager_icon_desc"/>
 
                 <TextView
-                    android:id="@+id/title_card2"
+                    android:id="@+id/title_card22"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -362,7 +388,7 @@
                     android:textColor="#FFFFFF"/>
 
                 <ProgressBar
-                    android:id="@+id/progress_bar_card2"
+                    android:id="@+id/progress_bar_card23"
                     style="?android:attr/progressBarStyleHorizontal"
                     android:layout_width="match_parent"
                     android:layout_height="8dp"
@@ -378,28 +404,28 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/used_storage_card2"
+                        android:id="@+id/used_storage_card22"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Used: 48.5 GB"
                         android:textSize="14sp"
-                        android:textColor="#B0C4DE"/>
+                        android:textColor="@color/white"/>
 
                     <TextView
                         android:id="@+id/total_storage_card2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end"
-                        android:text="128 GB"
+                        android:text=" of 128 GB"
                         android:textSize="14sp"
-                        android:textColor="#B0C4DE"/>
+                        android:textColor="@color/white"/>
                 </LinearLayout>
 
                 <Button
                     android:layout_width="130dp"
                     android:layout_height="wrap_content"
                     android:text="More details"
-                    android:id="@+id/button_details_card2"
+                    android:id="@+id/button_details_card23"
                     android:textStyle="bold"
                     android:textSize="14sp"
                     android:elevation="10dp"
@@ -439,4 +465,221 @@
 
     </HorizontalScrollView>
 
-</RelativeLayout>
+    <LinearLayout
+        android:id="@+id/otherdevice2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/connected_device"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Recent device"
+            android:elevation="10dp"
+            android:textSize="25sp"
+            android:fontFamily="sans-serif"
+            android:textStyle="bold"
+            android:layout_marginStart="10dp"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+
+
+    <HorizontalScrollView
+        android:id="@+id/connected_device2"
+        android:layout_below="@+id/otherdevice2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+            <!-- Card 1 -->
+            <LinearLayout
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/rounded_card_background"
+                android:layout_marginEnd="16dp"
+                android:padding="16dp">
+
+                <ImageView
+                    android:id="@+id/icon_card2"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/file_manager_icon"
+                    android:contentDescription="@string/file_manager_icon_desc"/>
+
+                <TextView
+                    android:id="@+id/title_card2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_gravity="center_horizontal"
+                    android:text="File Manager"
+                    android:textSize="18sp"
+                    android:textColor="#FFFFFF"/>
+
+                <ProgressBar
+                    android:id="@+id/progress_bar_card2"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="8dp"
+                    android:layout_marginTop="16dp"
+                    android:progress="48"
+                    android:max="128"
+                    android:progressDrawable="@drawable/progress_bar_style"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/used_storage_card2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Used: 48.5 GB"
+                        android:textSize="14sp"
+                        android:textColor="@color/white"/>
+
+                    <TextView
+                        android:id="@+id/total_storage_card1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:text=" of 128 GB"
+                        android:textSize="14sp"
+                        android:textColor="@color/white"/>
+                </LinearLayout>
+
+                <Button
+                    android:layout_width="130dp"
+                    android:layout_height="wrap_content"
+                    android:text="More details"
+                    android:id="@+id/button_details_card2"
+                    android:textStyle="bold"
+                    android:textSize="14sp"
+                    android:elevation="10dp"
+                    android:layout_marginStart="10dp"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="10dp"
+                    android:backgroundTint="@color/white"
+                    app:cornerRadius="10dp"/>
+            </LinearLayout>
+
+            <!-- Card 2 -->
+            <LinearLayout
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/rounded_card_background"
+                android:layout_marginEnd="16dp"
+                android:padding="16dp">
+
+                <ImageView
+                    android:id="@+id/icon_card3"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/file_manager_icon"
+                    android:contentDescription="@string/file_manager_icon_desc"/>
+
+                <TextView
+                    android:id="@+id/title_card3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_gravity="center_horizontal"
+                    android:text="File Manager"
+                    android:textSize="18sp"
+                    android:textColor="#FFFFFF"/>
+
+                <ProgressBar
+                    android:id="@+id/progress_bar_card3"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="8dp"
+                    android:layout_marginTop="16dp"
+                    android:progress="48"
+                    android:max="128"
+                    android:progressDrawable="@drawable/progress_bar_style"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/used_storage_card3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Used: 48.5 GB"
+                        android:textSize="14sp"
+                        android:textColor="@color/white"/>
+
+                    <TextView
+                        android:id="@+id/total_storage_card3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:text=" of 128 GB"
+                        android:textSize="14sp"
+                        android:textColor="@color/white"/>
+                </LinearLayout>
+
+                <Button
+                    android:layout_width="130dp"
+                    android:layout_height="wrap_content"
+                    android:text="More details"
+                    android:id="@+id/button_details_card3"
+                    android:textStyle="bold"
+                    android:textSize="14sp"
+                    android:elevation="10dp"
+                    android:layout_marginStart="10dp"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="10dp"
+                    android:backgroundTint="@color/white"
+                    app:cornerRadius="10dp"/>
+            </LinearLayout>
+
+            <!-- Add Card 3 -->
+            <LinearLayout
+                android:id="@+id/connect_device2"
+                android:layout_width="200dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:background="@drawable/rounded_card_background"
+                android:layout_marginEnd="16dp"
+                android:padding="16dp">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/plus_icon_card2"
+                        android:layout_width="164dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:padding="40dp"
+                        android:src="@drawable/icc_add" />
+                </FrameLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
+    </LinearLayout>
+
+</ScrollView>
+    </RelativeLayout>

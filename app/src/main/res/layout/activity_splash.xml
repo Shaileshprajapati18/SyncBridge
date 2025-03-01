@@ -2,25 +2,26 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000">
+    android:background="@drawable/backgroung">
 
     <ImageView
         android:id="@+id/splash_logo"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="350dp"
+        android:layout_height="350dp"
         android:layout_centerInParent="true"
-        android:src="@drawable/splash" />
+        android:src="@drawable/splashscreen" />
 
     <TextView
+        android:id="@+id/text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="SyncBridge"
-        android:textColor="@color/yellow"
+        android:textColor="@color/white"
         android:textSize="30sp"
+        android:layout_marginTop="-50dp"
         android:fontFamily="@font/star"
         android:textAlignment="center"
         android:textStyle="bold"
-        android:layout_marginTop="-30dp"
         android:layout_below="@id/splash_logo"
         />
     <ProgressBar
@@ -28,9 +29,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="10dp"
-        android:indeterminateTint="@color/yellow"
+        android:indeterminateTint="@color/white"
         android:max="100"
         android:progress="50"
         />
-
 </RelativeLayout>

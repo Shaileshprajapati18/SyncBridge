@@ -1,5 +1,7 @@
-package com.example.myapplication;
+package com.example.myapplication.Fragments;
 
+import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StatFs;
@@ -7,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -16,6 +19,9 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.bumptech.glide.Glide;
+import com.example.myapplication.Model.DatabaseHelper;
+import com.example.myapplication.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -28,6 +34,9 @@ import java.io.File;
 
 public class home extends Fragment {
 
+    DatabaseHelper databaseHelper;
+    TextView username;
+
     public home() {
         // Required empty public constructor
     }
@@ -35,20 +44,22 @@ public class home extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        // Get the current user's email from Firebase Authentication
+        username = view.findViewById(R.id.username);
         String currentUserEmail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        ImageView sideArrow=view.findViewById(R.id.sidearrow);
+        ImageView notification=view.findViewById(R.id.end_card);
+        Glide.with(this).load(R.drawable.botification).into(notification);
+        Glide.with(this).load(R.drawable.sidearrow).into(sideArrow);
 
-        // Firebase reference
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
 
-        // TextView for username display
-        TextView username = view.findViewById(R.id.username);
+        databaseHelper = new DatabaseHelper(getContext());
+        productData();
+
         LinearLayout connect_device=view.findViewById(R.id.connect_device);
 
-        // Fetch user details from Firebase
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -56,16 +67,19 @@ public class home extends Fragment {
 
                 for (DataSnapshot userSnapshot : snapshot.getChildren()) {
                     String userEmail = userSnapshot.child("email").getValue(String.class);
-                    // Match current user email with user email in database
                     if (currentUserEmail != null && currentUserEmail.equals(userEmail)) {
                         userFound = true;
 
                         String firstname = userSnapshot.child("firstname").getValue(String.class);
                         String lastname = userSnapshot.child("lastname").getValue(String.class);
+                        String phoneNumber = userSnapshot.child("phoneNumber").getValue(String.class);
+                        String email = userSnapshot.child("email").getValue(String.class);
 
-                        // Display user's first and last name
+                        boolean isInserted = databaseHelper.insertOrUpdateProduct(firstname,lastname,phoneNumber,email);
+                        if (isInserted) {
+                        }
                         username.setText(firstname + " " + lastname);
-                        break; // Exit loop once we find the user
+                        break;
                     }
                 }
 
@@ -162,5 +176,19 @@ public class home extends Fragment {
         }
 
         return String.format("%.2f %s", sizeInUnits, units[unitIndex]);
+    }
+    private void productData() {
+        Cursor cursor = databaseHelper.viewData();
+        if (cursor.moveToFirst()) {
+            do {
+
+                String firstName = cursor.getString(cursor.getColumnIndexOrThrow("first_name"));
+                String lastName = cursor.getString(cursor.getColumnIndexOrThrow("last_name"));
+
+                username.setText(firstName + " " + lastName);
+            }
+            while (cursor.moveToNext());
+            cursor.close();
+        }
     }
 }

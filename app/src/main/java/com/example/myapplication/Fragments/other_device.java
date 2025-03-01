@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.Fragments;
 
 import android.Manifest;
 import android.app.Activity;
@@ -26,6 +26,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myapplication.Model.FileData;
+import com.example.myapplication.R;
+import com.example.myapplication.Adapters.deviceAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -417,7 +420,7 @@ public class other_device extends Fragment implements deviceAdapter.OnItemClickL
                 .commit();
     }
 
-    void handleBackPress() {
+    public void handleBackPress() {
         onBackPressed();  // Call the method that handles back press logic
     }
 

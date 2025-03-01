@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:background="@color/yellow"
-    tools:context=".About_us">
+    tools:context=".Activites.About_us">
 
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/title"
@@ -53,7 +53,7 @@
             android:layout_marginTop="10dp"
             android:text="Our File Manager and File Transfer app enables seamless file management and wireless transfers between mobile devices, laptops, and PCs. Easily share files without cables, allowing fast transfers between mobile to mobile, mobile to laptop, and vice versa. With its user-friendly interface, you can effortlessly browse, copy, and paste files across devices with a few taps. Designed for convenience, the app supports large file transfers, ensuring security and speed without compromising quality. Whether organizing your files or sending them across devices, our solution offers the ultimate flexibility for a cable-free experience."
             android:textSize="19dp"
-            android:background="@drawable/inner_button_background"
+            android:background="@drawable/rounded_grey_background"
             android:textColor="@color/white"/>
     </LinearLayout>
 

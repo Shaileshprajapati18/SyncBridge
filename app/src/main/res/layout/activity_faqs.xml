@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:background="@color/yellow"
-    tools:context=".faqs">
+    tools:context=".Activites.faqs">
 
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/title"
@@ -55,7 +55,7 @@
         android:layout_marginTop="10dp"
         android:text="1. General Information: Briefly explain what the app does, such as its primary features (file management, wireless file transfer, etc.)."
         android:textSize="19dp"
-        android:background="@drawable/inner_button_background"
+        android:background="@drawable/rounded_grey_background"
         android:textColor="@color/white"/>
     <TextView
         android:layout_below="@id/textview1"
@@ -68,7 +68,7 @@
         android:layout_marginTop="10dp"
         android:textSize="19dp"
         android:text="2. How to Use: Provide step-by-step instructions for key actions like transferring files, managing storage, connecting devices, and troubleshooting."
-        android:background="@drawable/inner_button_background"
+        android:background="@drawable/rounded_grey_background"
         android:textColor="@color/white"/>
 
     <TextView
@@ -82,7 +82,7 @@
         android:layout_marginTop="10dp"
         android:textSize="19dp"
         android:text="3. Technical Requirements: Mention any device compatibility or specific software/hardware requirements."
-        android:background="@drawable/inner_button_background"
+        android:background="@drawable/rounded_grey_background"
         android:textColor="@color/white"/>
 
     <TextView
@@ -96,7 +96,7 @@
         android:layout_marginTop="10dp"
         android:textSize="19dp"
         android:text="4. Security: Address concerns about data security during transfers and file access."
-        android:background="@drawable/inner_button_background"
+        android:background="@drawable/rounded_grey_background"
         android:textColor="@color/white"/>
 
     <TextView
@@ -110,7 +110,7 @@
         android:layout_marginTop="10dp"
         android:textSize="19dp"
         android:text="5. Common Issues: Troubleshooting solutions for common problems, like connectivity issues, failed transfers, or permissions."
-        android:background="@drawable/inner_button_background"
+        android:background="@drawable/rounded_grey_background"
         android:textColor="@color/white"/>
 
     <TextView
@@ -124,7 +124,7 @@
         android:layout_marginTop="10dp"
         android:textSize="19dp"
         android:text="6. Pricing: Clarify if there are any costs, premium features, or subscription plans."
-        android:background="@drawable/inner_button_background"
+        android:background="@drawable/rounded_grey_background"
         android:textColor="@color/white"/>
 
     <TextView
@@ -138,7 +138,7 @@
         android:layout_marginTop="10dp"
         android:textSize="19dp"
         android:text="7. Support: Provide contact details or links for further help."
-        android:background="@drawable/inner_button_background"
+        android:background="@drawable/rounded_grey_background"
         android:textColor="@color/white"/>
 
     </LinearLayout>

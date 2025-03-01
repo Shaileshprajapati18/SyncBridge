@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.Services;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -12,9 +12,9 @@ import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
+import com.example.myapplication.R;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
