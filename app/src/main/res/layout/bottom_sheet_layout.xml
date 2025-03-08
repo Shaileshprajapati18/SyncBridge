@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:backgroundTint="@color/grey_shimmer"
+    android:background="@drawable/backgroung_overlay"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:id="@+id/bottom_sheet_open"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp">
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_open" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Open"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            android:layout_marginStart="16dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/bottom_sheet_rename"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp">
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_rename" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rename"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            android:layout_marginStart="16dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/bottom_sheet_copy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp">
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_copy" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:text="Copy"
+            android:textSize="16sp"
+            android:layout_marginStart="16dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/bottom_sheet_paste"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp">
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_paste" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Paste"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:layout_marginStart="16dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/bottom_sheet_delete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp">
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_delete" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Delete"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:layout_marginStart="16dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/bottom_sheet_share"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp">
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_share" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Share"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:layout_marginStart="16dp"/>
+    </LinearLayout>
+
+</LinearLayout>

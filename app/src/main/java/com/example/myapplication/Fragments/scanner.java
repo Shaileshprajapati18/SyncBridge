@@ -55,12 +55,10 @@ public class scanner extends Fragment {
     private boolean isQrProcessed = false;
 
     public scanner() {
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_scanner, container, false);
 
         barcodeScannerView = view.findViewById(R.id.barcode_scanner);
@@ -69,8 +67,6 @@ public class scanner extends Fragment {
 
         barcodeScannerView.getStatusView().setVisibility(View.GONE);
 
-        startScanning();
-
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
         } else {
@@ -78,7 +74,6 @@ public class scanner extends Fragment {
         }
 
         galleryButton.setOnClickListener(v -> openGallery());
-
         flashToggleButton.setOnClickListener(v -> toggleFlash());
 
         return view;
@@ -87,6 +82,8 @@ public class scanner extends Fragment {
     private void startScanning() {
         if (barcodeScannerView != null) {
             barcodeScannerView.decodeContinuous(callback);
+            barcodeScannerView.resume(); // Ensure scanner is active
+            Log.d("ScannerFragment", "Scanning started");
         } else {
             Toast.makeText(getActivity(), "Barcode scanner view is not initialized", Toast.LENGTH_SHORT).show();
         }
@@ -113,19 +110,16 @@ public class scanner extends Fragment {
         @Override
         public void barcodeResult(BarcodeResult result) {
             if (result.getText() != null && !isQrProcessed) {
-                isQrProcessed = true;  // Ensure transition only happens once
+                isQrProcessed = true;
                 String qrData = result.getText();
 
-                // Check if the scanned QR data is a valid UUID
                 if (isValidUUID(qrData)) {
-                    // Show the AlertDialog with progress bar
                     showSuccessDialog(qrData);
                 } else {
-                    // Show an alert that the QR code is invalid
                     showAlert("Invalid QR Code", "The scanned QR code does not contain valid UUID data.");
                 }
 
-                barcodeScannerView.pause();  // Stop scanning once QR code is processed
+                barcodeScannerView.pause();
             }
         }
 
@@ -142,11 +136,8 @@ public class scanner extends Fragment {
     }
 
     private void storeQRCodeData(String qrData) {
-        // Get SharedPreferences instance
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("MyAppPrefs", getActivity().MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-
-        // Store QR code data
         editor.putString("SessionID", qrData);
         editor.apply();
 
@@ -165,22 +156,12 @@ public class scanner extends Fragment {
                         Log.e("FirebaseUpdate", "Update failed", task.getException());
                     }
                 });
-
-    }
-
-    private void reloadScannerFragment() {
-        // Reload the scanner fragment
-        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-        transaction.replace(R.id.open_screen, new scanner()); // Replace with a new instance of scanner fragment
-        transaction.addToBackStack(null);
-        transaction.commit();
     }
 
     private void openOtherDeviceFragment(String qrData) {
-        // Create the fragment and pass the QR code data
         other_device fragment = new other_device();
         Bundle args = new Bundle();
-        args.putString("qrData", qrData); // Pass the scanned QR data
+        args.putString("qrData", qrData);
         fragment.setArguments(args);
 
         FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
@@ -193,9 +174,7 @@ public class scanner extends Fragment {
     public void onResume() {
         super.onResume();
         isQrProcessed = false;
-        if (barcodeScannerView != null) {
-            barcodeScannerView.resume();
-        }
+        startScanning(); // Restart scanning when fragment resumes
     }
 
     @Override
@@ -232,12 +211,9 @@ public class scanner extends Fragment {
 
                     if (result != null && result.getText() != null) {
                         String qrData = result.getText();
-                        // Check if the scanned QR data is a valid UUID
                         if (isValidUUID(qrData)) {
-                            // Show the connection success dialog with the fetched QR data
                             showSuccessDialog(qrData);
                         } else {
-                            // Show an alert that the QR code is invalid
                             showAlert("Invalid QR Code", "The scanned QR code does not contain valid UUID data.");
                         }
                     } else {
@@ -251,53 +227,41 @@ public class scanner extends Fragment {
     }
 
     private void showSuccessDialog(String qrData) {
-        // Create a progress bar
         ProgressBar progressBar = new ProgressBar(getActivity());
         progressBar.setIndeterminate(true);
 
-        // Create a LinearLayout to hold the progress bar and the "Connecting..." message
         LinearLayout layout = new LinearLayout(getActivity());
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.setPadding(50, 50, 50, 50);
 
-        // Create a TextView for the connecting message
         TextView connectingText = new TextView(getActivity());
         connectingText.setText("Connecting...");
         connectingText.setPadding(0, 20, 0, 20);
 
-        // Add the progress bar and text to the layout
         layout.addView(progressBar);
         layout.addView(connectingText);
 
-        // Flag to check if dialog was canceled
         final boolean[] isDialogCanceled = {false};
 
-        // Build the AlertDialog with the loader and "Cancel" button
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Connection")
                 .setView(layout)
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        isDialogCanceled[0] = true;
-                        dialog.dismiss();
-                    }
+                .setNegativeButton("Cancel", (dialog, which) -> {
+                    isDialogCanceled[0] = true;
+                    dialog.dismiss();
                 })
                 .setCancelable(false);
 
         AlertDialog dialog = builder.create();
         dialog.show();
 
-        // Simulating connection delay
         new Thread(() -> {
             try {
-                // Simulate connection time
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
-            // Dismiss the dialog only if it hasn't been canceled
             if (!isDialogCanceled[0]) {
                 dialog.dismiss();
                 storeQRCodeData(qrData);
@@ -311,14 +275,13 @@ public class scanner extends Fragment {
                 .setMessage(message)
                 .setPositiveButton("OK", (dialog, which) -> {
                     dialog.dismiss();
-                    reloadScannerFragment(); // Reload the scanner fragment
+                    startScanning(); // Restart scanning instead of reloading fragment
                 })
                 .setCancelable(false);
         builder.create().show();
     }
 
     private Result decodeQRCodeFromBitmap(Bitmap bitmap) {
-        // Create a binary bitmap from the given bitmap
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
         int[] pixels = new int[width * height];
@@ -328,7 +291,7 @@ public class scanner extends Fragment {
         try {
             return new MultiFormatReader().decode(binaryBitmap);
         } catch (Exception e) {
-            return null; // QR code could not be decoded
+            return null;
         }
     }
 }

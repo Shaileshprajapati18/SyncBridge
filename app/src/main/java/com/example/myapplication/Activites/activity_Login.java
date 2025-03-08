@@ -56,54 +56,6 @@ public class activity_Login extends AppCompatActivity {
             finish();
         }
 
-        TextView textView = findViewById(R.id.loginText);
-        Animation slideAnimation = AnimationUtils.loadAnimation(this, R.anim.slide_text);
-        textView.startAnimation(slideAnimation);
-
-        slideAnimation.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                startCharacterColorAnimation(textView, "LOGIN");
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-        });
-    }
-    private void startCharacterColorAnimation(TextView textView, String text) {
-        Timer timer = new Timer();
-        int delay = 0; // Initial delay
-        int interval = 100; // Change color every 200ms
-
-        timer.schedule(new TimerTask() {
-            int index = 0; // Character index
-
-            @Override
-            public void run() {
-                runOnUiThread(() -> {
-                    SpannableString spannable = new SpannableString(text);
-
-                    for (int i = 0; i < text.length(); i++) {
-                        spannable.setSpan((Object) new ForegroundColorSpan(Color.WHITE),  i,  (i + 1), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    }
-
-                    spannable.setSpan((Object) new ForegroundColorSpan(Color.LTGRAY), index,  (index + 1), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-                    textView.setText(spannable);
-
-                    index++;
-                    if (index >= text.length()) {
-                        index = 0;
-                    }
-                });
-            }
-        }, delay, interval);
-        // Initialize UI elements
         emailField = findViewById(R.id.email);
         passwordField = findViewById(R.id.password);
         loginButton = findViewById(R.id.loginButton);
@@ -111,7 +63,6 @@ public class activity_Login extends AppCompatActivity {
         forgotPasswordText = findViewById(R.id.forgotPasswordText);
         progressBar=findViewById(R.id.progressbar);
 
-        // Set click listener for the login button
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,7 +78,6 @@ public class activity_Login extends AppCompatActivity {
             }
         });
 
-        // Redirect to register page if the user doesn't have an account
         registerRedirect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -143,7 +93,6 @@ public class activity_Login extends AppCompatActivity {
         String email = emailField.getText().toString().trim();
         String password = passwordField.getText().toString().trim();
 
-        // Validate inputs
         if (TextUtils.isEmpty(email)) {
             emailField.setError("Email is required");
             emailField.requestFocus();
@@ -181,7 +130,6 @@ public class activity_Login extends AppCompatActivity {
 
                             finish();
                         } else {
-                            // Login failed
                             Toast.makeText(activity_Login.this, "Invalid email or password", Toast.LENGTH_SHORT).show();
                         }
                     }

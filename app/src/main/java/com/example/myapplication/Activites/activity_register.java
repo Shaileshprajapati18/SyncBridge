@@ -51,54 +51,6 @@ public class activity_register extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        TextView textView = findViewById(R.id.signup);
-        Animation slideAnimation = AnimationUtils.loadAnimation(this, R.anim.slide_text);
-        textView.startAnimation(slideAnimation);
-
-        slideAnimation.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                startCharacterColorAnimation(textView, "REGISTER");
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-        });
-    }
-    private void startCharacterColorAnimation(TextView textView, String text) {
-        Timer timer = new Timer();
-        int delay = 0; // Initial delay
-        int interval = 100; // Change color every 200ms
-
-        timer.schedule(new TimerTask() {
-            int index = 0; // Character index
-
-            @Override
-            public void run() {
-                runOnUiThread(() -> {
-                    SpannableString spannable = new SpannableString(text);
-
-                    for (int i = 0; i < text.length(); i++) {
-                        spannable.setSpan((Object) new ForegroundColorSpan(Color.WHITE),  i,  (i + 1), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    }
-
-                    spannable.setSpan((Object) new ForegroundColorSpan(Color.LTGRAY), index,  (index + 1), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-                    textView.setText(spannable);
-
-                    index++;
-                    if (index >= text.length()) {
-                        index = 0; // Restart animation after the last character
-                    }
-                });
-            }
-        }, delay, interval);
-
         mAuth = FirebaseAuth.getInstance();
         reference = FirebaseDatabase.getInstance().getReference("Users");
 

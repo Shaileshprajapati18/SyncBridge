@@ -27,11 +27,6 @@ public class splashActivity extends AppCompatActivity {
         ImageView splashLogo = findViewById(R.id.splash_logo);
         Glide.with(this).load(R.drawable.splashscreen).into(splashLogo);
 
-        TextView textView = findViewById(R.id.text);
-        Animation slideAnimation = AnimationUtils.loadAnimation(this, R.anim.slide_text);
-        textView.startAnimation(slideAnimation);
-
-
         new Handler().postDelayed(() -> {
             SharedPreferences sharedPreferences = getSharedPreferences("settings", MODE_PRIVATE);
             boolean isCopyPasteEnabled = sharedPreferences.getBoolean("copyPasteEnabled", false);

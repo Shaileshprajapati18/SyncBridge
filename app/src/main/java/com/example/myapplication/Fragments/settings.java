@@ -89,9 +89,6 @@ public class settings extends Fragment {
         copyPasteSwitch = view.findViewById(R.id.copyPasteSwitch);
         profileImage = view.findViewById(R.id.profile);
 
-        ImageView upgradenow = view.findViewById(R.id.upgradenow);
-        Glide.with(this).load(R.drawable.upgradenow).into(upgradenow);
-
         Username = view.findViewById(R.id.username);
         Email = view.findViewById(R.id.email);
 

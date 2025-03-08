@@ -38,7 +38,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class profile_settings extends AppCompatActivity {
 
-    private TextView Firstname, Lastname, Phonenumber, Email;
+    private TextView Firstname, Lastname, Phonenumber, Email,saveUpdate;
     private ImageView arrow_back;
     private CircleImageView profile;
     private static final int PICK_IMAGE = 1;
@@ -60,6 +60,13 @@ public class profile_settings extends AppCompatActivity {
 
         initializeViews();
 
+        saveUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                uploadImageToFirebase(selectedBitmap);
+            }
+        });
+
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Uploading...");
         progressDialog.setCancelable(false);
@@ -76,6 +83,7 @@ public class profile_settings extends AppCompatActivity {
         Lastname = findViewById(R.id.lastname);
         Phonenumber = findViewById(R.id.phonenumber);
         Email = findViewById(R.id.email);
+        saveUpdate = findViewById(R.id.saveUpdate);
     }
 
     private void setupListeners() {
@@ -177,7 +185,6 @@ public class profile_settings extends AppCompatActivity {
             try {
                 selectedBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
                 profile.setImageBitmap(selectedBitmap);
-                uploadImageToFirebase(selectedBitmap);
             } catch (IOException e) {
                 Log.e("ProfileActivity", "Error loading image", e);
             }
@@ -192,16 +199,14 @@ public class profile_settings extends AppCompatActivity {
 
         progressDialog.show();
 
-        // Convert bitmap to Base64
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 80, byteArrayOutputStream);
         byte[] imageBytes = byteArrayOutputStream.toByteArray();
         String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
 
-        // Upload Base64 to Firebase
         reference.child("profileImage").setValue(encodedImage)
                 .addOnSuccessListener(aVoid -> {
-                    // Convert Base64 to local file and store path in database
+
                     String imagePath = convertBase64ToLocalFile(encodedImage);
                     String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
                     boolean success = databaseHelper.insertOrUpdateProduct(

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Checked state (thumb is light blue) -->
-    <item android:color="@color/white" android:state_checked="true"/>
+    <item android:color="@color/yellow" android:state_checked="true"/>
     <!-- Unchecked state (thumb is white) -->
-    <item android:color="@android:color/black" android:state_checked="false"/>
+    <item android:color="@android:color/white" android:state_checked="false"/>
 </selector>

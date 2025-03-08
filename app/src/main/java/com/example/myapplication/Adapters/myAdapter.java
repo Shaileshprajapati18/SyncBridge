@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,12 +17,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.PopupMenu;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.Activites.storageViewer;
 import com.example.myapplication.R;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.io.File;
 import java.io.IOException;
@@ -81,33 +80,7 @@ public class myAdapter extends RecyclerView.Adapter<myAdapter.ViewHolder> {
         holder.itemView.setOnClickListener(v -> openFile(file));
 
         holder.itemView.setOnLongClickListener(v -> {
-
-            PopupMenu popupMenu = new PopupMenu(context, v);
-
-            popupMenu.getMenuInflater().inflate(R.menu.file_popup_menu, popupMenu.getMenu());
-            popupMenu.setForceShowIcon(true);
-
-            popupMenu.setOnMenuItemClickListener(item -> {
-                int id = item.getItemId();
-                if (id == R.id.action_open) {
-                    openFile(file);
-                } else if (id == R.id.action_rename) {
-                    renameFile(file, holder);
-                } else if (id == R.id.action_copy) {
-                    fileToCopy = file;
-                    copyToClipboard(file);
-                    Toast.makeText(context, "File copied to clipboard", Toast.LENGTH_SHORT).show();
-                } else if (id == R.id.action_paste) {
-                    promptPasteAction(holder.getAdapterPosition());
-                } else if (id == R.id.action_delete) {
-                    deleteFile(file, holder);
-                } else if (id == R.id.action_share) {
-                    shareFile(file);
-                }
-                return true;
-            });
-
-            popupMenu.show();
+            showBottomSheet(file, holder, position);
             return true;
         });
     }
@@ -125,7 +98,6 @@ public class myAdapter extends RecyclerView.Adapter<myAdapter.ViewHolder> {
         notifyDataSetChanged();
     }
 
-    // New method to refresh the current directory
     public void refreshCurrentDirectory() {
         if (currentDirectory != null) {
             File[] updatedFiles = currentDirectory.listFiles();
@@ -154,6 +126,54 @@ public class myAdapter extends RecyclerView.Adapter<myAdapter.ViewHolder> {
             fileInfoLayout = itemView.findViewById(R.id.file_info_layout);
             verticalLine = itemView.findViewById(R.id.vertical_line);
         }
+    }
+
+    private void showBottomSheet(File file, ViewHolder holder, int position) {
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(context);
+        View bottomSheetView = LayoutInflater.from(context).inflate(R.layout.bottom_sheet_layout, null);
+
+        // Initialize bottom sheet menu items
+        LinearLayout openItem = bottomSheetView.findViewById(R.id.bottom_sheet_open);
+        LinearLayout renameItem = bottomSheetView.findViewById(R.id.bottom_sheet_rename);
+        LinearLayout copyItem = bottomSheetView.findViewById(R.id.bottom_sheet_copy);
+        LinearLayout pasteItem = bottomSheetView.findViewById(R.id.bottom_sheet_paste);
+        LinearLayout deleteItem = bottomSheetView.findViewById(R.id.bottom_sheet_delete);
+        LinearLayout shareItem = bottomSheetView.findViewById(R.id.bottom_sheet_share);
+
+        openItem.setOnClickListener(v -> {
+            openFile(file);
+            bottomSheetDialog.dismiss();
+        });
+
+        renameItem.setOnClickListener(v -> {
+            renameFile(file, holder);
+            bottomSheetDialog.dismiss();
+        });
+
+        copyItem.setOnClickListener(v -> {
+            fileToCopy = file;
+            copyToClipboard(file);
+            Toast.makeText(context, "File copied to clipboard", Toast.LENGTH_SHORT).show();
+            bottomSheetDialog.dismiss();
+        });
+
+        pasteItem.setOnClickListener(v -> {
+            promptPasteAction(position);
+            bottomSheetDialog.dismiss();
+        });
+
+        deleteItem.setOnClickListener(v -> {
+            deleteFile(file, holder);
+            bottomSheetDialog.dismiss();
+        });
+
+        shareItem.setOnClickListener(v -> {
+            shareFile(file);
+            bottomSheetDialog.dismiss();
+        });
+
+        bottomSheetDialog.setContentView(bottomSheetView);
+        bottomSheetDialog.show();
     }
 
     private void openFile(File file) {
@@ -206,7 +226,7 @@ public class myAdapter extends RecyclerView.Adapter<myAdapter.ViewHolder> {
                 boolean renamed = file.renameTo(newFile);
                 if (renamed) {
                     Toast.makeText(context, "File renamed", Toast.LENGTH_SHORT).show();
-                    refreshCurrentDirectory(); // Refresh after rename
+                    refreshCurrentDirectory();
                 } else {
                     Toast.makeText(context, "Failed to rename", Toast.LENGTH_SHORT).show();
                 }
@@ -265,13 +285,6 @@ public class myAdapter extends RecyclerView.Adapter<myAdapter.ViewHolder> {
         }
     }
 
-    private void showFilesInDirectory(File directory) {
-        File[] files = directory.listFiles();
-        if (files != null) {
-            setFiles(files);
-        }
-    }
-
     private void copyDirectoryContents(File source, File destination) {
         File[] files = source.listFiles();
         if (files != null) {
@@ -299,14 +312,14 @@ public class myAdapter extends RecyclerView.Adapter<myAdapter.ViewHolder> {
                     if (file.isDirectory()) {
                         if (deleteDirectory(file)) {
                             Toast.makeText(context, "Folder deleted", Toast.LENGTH_SHORT).show();
-                            refreshCurrentDirectory(); // Refresh after delete
+                            refreshCurrentDirectory();
                         } else {
                             Toast.makeText(context, "Failed to delete folder", Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         if (file.delete()) {
                             Toast.makeText(context, "File deleted", Toast.LENGTH_SHORT).show();
-                            refreshCurrentDirectory(); // Refresh after delete
+                            refreshCurrentDirectory();
                         } else {
                             Toast.makeText(context, "Failed to delete file", Toast.LENGTH_SHORT).show();
                         }

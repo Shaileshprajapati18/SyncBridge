@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/backgroung"
+    android:background="@color/black"
     tools:context=".Fragments.settings">
 
     <com.google.android.material.bottomappbar.BottomAppBar
@@ -39,6 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"
+            android:layout_margin="10dp"
             android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
@@ -55,13 +56,14 @@
                     android:id="@+id/profile"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
+                    android:src="@drawable/profile"
                     android:background="@color/black"
                     />
 
             </com.google.android.material.card.MaterialCardView>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
                 android:orientation="vertical">
@@ -71,7 +73,7 @@
                 android:layout_height="wrap_content"
                 android:text=""
                 android:elevation="10dp"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:maxLines="1"
                 android:textColor="@android:color/white"
                 android:textStyle="bold"
@@ -84,35 +86,37 @@
                     android:text=""
                     android:elevation="10dp"
                     android:layout_marginTop="2dp"
-                    android:textSize="15sp"
+                    android:textSize="14sp"
                     android:textColor="@color/grey"
+                    />
+
+                <TextView
+                    android:id="@+id/full_details"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Profile Settings"
+                    android:textAlignment="center"
+                    android:textColor="@color/yellow"
+                    android:padding="8dp"
+                    android:layout_marginTop="10dp"
+                    android:backgroundTint="@color/yellow"
+                    android:background="@drawable/name_overlay"
+                    android:textSize="14sp"
                     />
 
             </LinearLayout>
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/full_details"
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:background="#232222"/>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Profile Settings"
-            android:textAlignment="center"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            android:textColor="@color/black"
-            android:padding="8dp"
-            android:backgroundTint="@color/white"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/rounded_grey_background"
-            android:textSize="16dp"
-          />
-
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/rounded_grey_background"
-    android:layout_margin="10dp"
-    android:orientation="vertical">
+            android:layout_margin="10dp"
+            android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -224,10 +228,14 @@
 
 </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:background="#232222"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/rounded_grey_background"
             android:layout_margin="10dp"
             android:orientation="vertical">
             <LinearLayout
@@ -330,26 +338,47 @@
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/Logout"
+        <View
             android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:background="#232222"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:text="Logout"
-            android:textAlignment="center"
-            android:layout_margin="10dp"
-            android:background="@drawable/rounded_grey_background"
-            android:textSize="18dp"
-            android:textStyle="bold"
-            android:textColor="@color/white"/>
+            android:orientation="horizontal"
+            android:layout_margin="25dp"
+            android:gravity="center_vertical">
 
-        <ImageView
-            android:layout_width="400dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:layout_margin="10dp"
-            android:id="@+id/upgradenow"/>
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/logout"
+                android:tint="@color/yellow"
+                android:layout_marginEnd="8dp"/>
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/Logout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Logout"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/yellow"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/grey"
+                    android:text="Exit from your account"/>
+
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 
 

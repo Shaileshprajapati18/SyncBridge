@@ -1,6 +1,7 @@
 package com.example.myapplication.Activites;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -9,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.myapplication.Fragments.home;
@@ -38,7 +38,6 @@ public class open_screen extends AppCompatActivity {
         bottom_navigation = findViewById(R.id.bottom_navigation);
 
         if (savedInstanceState == null) {
-
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.add(R.id.open_screen, homeFragment, "home");
             transaction.add(R.id.open_screen, myDeviceFragment, "my_device").hide(myDeviceFragment);
@@ -47,6 +46,17 @@ public class open_screen extends AppCompatActivity {
             transaction.add(R.id.open_screen, settingsFragment, "settings").hide(settingsFragment);
             transaction.commit();
             currentFragment = homeFragment;
+        } else {
+            homeFragment = (home) getSupportFragmentManager().findFragmentByTag("home");
+            myDeviceFragment = (my_device) getSupportFragmentManager().findFragmentByTag("my_device");
+            scannerFragment = (scanner) getSupportFragmentManager().findFragmentByTag("scanner");
+            otherDeviceFragment = (other_device) getSupportFragmentManager().findFragmentByTag("other_device");
+            settingsFragment = (settings) getSupportFragmentManager().findFragmentByTag("settings");
+            currentFragment = findVisibleFragment();
+            if (currentFragment == null) {
+                currentFragment = homeFragment;
+                switchFragment(homeFragment);
+            }
         }
 
         bottom_navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -79,13 +89,20 @@ public class open_screen extends AppCompatActivity {
     public void switchFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
-        if (currentFragment != null) {
+        if (currentFragment != null && currentFragment != fragment) {
             transaction.hide(currentFragment);
+            Log.d("OpenScreen", "Hiding fragment: " + currentFragment.getClass().getSimpleName());
         }
 
-        transaction.show(fragment);
-        transaction.commit();
+        if (fragment.isAdded()) {
+            transaction.show(fragment);
+            Log.d("OpenScreen", "Showing fragment: " + fragment.getClass().getSimpleName());
+        } else {
+            transaction.add(R.id.open_screen, fragment, fragment.getClass().getSimpleName());
+            Log.d("OpenScreen", "Adding fragment: " + fragment.getClass().getSimpleName());
+        }
 
+        transaction.commitNow();
         currentFragment = fragment;
         updateBottomNavigationViewSelection();
     }
@@ -93,9 +110,11 @@ public class open_screen extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (currentFragment != homeFragment) {
+            Log.d("OpenScreen", "Navigating to home from: " + currentFragment.getClass().getSimpleName());
             switchFragment(homeFragment);
             bottom_navigation.setSelectedItemId(R.id.home_icon);
         } else {
+            Log.d("OpenScreen", "Showing exit dialog from home");
             showExitConfirmationDialog();
         }
     }
@@ -112,6 +131,7 @@ public class open_screen extends AppCompatActivity {
         } else if (currentFragment == settingsFragment) {
             bottom_navigation.setSelectedItemId(R.id.settings);
         }
+        Log.d("OpenScreen", "Updated BottomNavigationView to: " + bottom_navigation.getSelectedItemId());
     }
 
     private void showExitConfirmationDialog() {
@@ -125,19 +145,19 @@ public class open_screen extends AppCompatActivity {
                 .setCancelable(false)
                 .create();
 
-        positiveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
-        negativeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
+        positiveButton.setOnClickListener(v -> finish());
+        negativeButton.setOnClickListener(v -> dialog.dismiss());
         dialog.show();
+    }
+
+    private Fragment findVisibleFragment() {
+        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+            if (fragment != null && fragment.isVisible()) {
+                Log.d("OpenScreen", "Visible fragment found: " + fragment.getClass().getSimpleName());
+                return fragment;
+            }
+        }
+        Log.d("OpenScreen", "No visible fragment found");
+        return null;
     }
 }
