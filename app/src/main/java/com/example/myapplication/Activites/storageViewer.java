@@ -2,12 +2,14 @@ package com.example.myapplication.Activites;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
 import com.example.myapplication.Adapters.myAdapter;
 
@@ -16,7 +18,7 @@ import java.io.File;
 public class storageViewer extends AppCompatActivity {
 
     RecyclerView recyclerView;
-    TextView noFilesTextView;
+    ImageView noFilesTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +34,7 @@ public class storageViewer extends AppCompatActivity {
 
         if (files == null || files.length == 0) {
             noFilesTextView.setVisibility(View.VISIBLE);
+            Glide.with(this).load(R.drawable.nofiles).into(noFilesTextView);
             recyclerView.setVisibility(View.GONE);
         } else {
             noFilesTextView.setVisibility(View.GONE);

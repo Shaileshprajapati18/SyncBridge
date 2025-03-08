@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="10dp"
+        android:layout_margin="5dp"
+        android:background="#211E1E">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:background="@drawable/rounded_card_background">
+    <ImageView
+        android:id="@+id/deviceImage"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/deviceimg"
+        android:scaleType="centerCrop"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true" />
+
+    <TextView
+        android:id="@+id/deviceName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Smart TV"
+        android:textSize="18sp"
+        android:maxLines="1"
+        android:textStyle="bold"
+        android:textColor="#ffffff"
+        android:layout_toEndOf="@id/deviceImage"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp" />
+
+    <TextView
+        android:id="@+id/username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="John Doe"
+        android:textSize="14sp"
+        android:maxLines="1"
+        android:textColor="@color/grey"
+        android:layout_toEndOf="@id/deviceImage"
+        android:layout_below="@id/deviceName"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp" />
+
+    <TextView
+        android:id="@+id/onlineStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Online"
+        android:textSize="12sp"
+        android:textColor="#00FF00"
+        android:layout_toEndOf="@id/deviceImage"
+        android:layout_below="@id/username"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp" />
+
+    <ImageView
+        android:id="@+id/moreOptions"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/baseline_more_vert_24"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:contentDescription="More Options" />
+
+    </RelativeLayout>
+</com.google.android.material.card.MaterialCardView>

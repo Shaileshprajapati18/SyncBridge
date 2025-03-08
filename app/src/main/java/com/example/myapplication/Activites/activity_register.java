@@ -190,7 +190,7 @@ public class activity_register extends AppCompatActivity {
                         progressBar.setVisibility(View.GONE);
 
                         if (task.isSuccessful()) {
-                            RegisterModel registerModel = new RegisterModel(firstName, lastName, fullPhoneNumber, email, password);
+                            RegisterModel registerModel = new RegisterModel(firstName, lastName, fullPhoneNumber, email, password,"");
                             reference.child(email.replace(".", ",")).setValue(registerModel);
 
                             SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", getApplicationContext().MODE_PRIVATE);
@@ -201,7 +201,6 @@ public class activity_register extends AppCompatActivity {
 
                             Toast.makeText(activity_register.this, "Registration successful", Toast.LENGTH_SHORT).show();
 
-                            // Redirect to login activity after successful registration
                             Intent intent = new Intent(activity_register.this, activity_Login.class);
                             startActivity(intent);
                             finish();

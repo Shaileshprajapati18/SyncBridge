@@ -12,11 +12,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 3;
     public static final String TABLE_PRODUCTS = "products";
 
-    private static final String COLUMN_ID = "id";  // Add an ID column
-    private static final String COLUMN_FIRST_NAME = "first_name";
-    private static final String COLUMN_LAST_NAME = "last_name";
-    private static final String COLUMN_PHONE = "phone";
-    private static final String COLUMN_EMAIL = "email";
+    public static final String COLUMN_ID = "id";  // Changed to public
+    public static final String COLUMN_FIRST_NAME = "first_name";  // Changed to public
+    public static final String COLUMN_LAST_NAME = "last_name";  // Changed to public
+    public static final String COLUMN_PHONE = "phone";  // Changed to public
+    public static final String COLUMN_EMAIL = "email";  // Changed to public
+    public static final String COLUMN_IMAGE = "image";  // Changed to public
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -29,7 +30,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_FIRST_NAME + " TEXT, " +
                 COLUMN_LAST_NAME + " TEXT, " +
                 COLUMN_PHONE + " TEXT, " +
-                COLUMN_EMAIL + " TEXT UNIQUE)";
+                COLUMN_EMAIL + " TEXT UNIQUE," +
+                COLUMN_IMAGE + " TEXT)";
         db.execSQL(createTableQuery);
     }
 
@@ -40,7 +42,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // Insert or Update Product
-    public boolean insertOrUpdateProduct(String firstName, String lastName, String phone, String email) {
+    public boolean insertOrUpdateProduct(String firstName, String lastName, String phone, String email, String image) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         // Check if email exists
@@ -53,13 +55,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(COLUMN_LAST_NAME, lastName);
         contentValues.put(COLUMN_PHONE, phone);
         contentValues.put(COLUMN_EMAIL, email);
+        contentValues.put(COLUMN_IMAGE, image);
 
         long result;
         if (exists) {
-            // Update existing row
             result = db.update(TABLE_PRODUCTS, contentValues, COLUMN_EMAIL + " = ?", new String[]{email});
         } else {
-            // Insert new row
             result = db.insert(TABLE_PRODUCTS, null, contentValues);
         }
 
@@ -67,7 +68,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result != -1;
     }
 
-    // Retrieve Data
     public Cursor viewData() {
         SQLiteDatabase db = this.getReadableDatabase();
         return db.query(TABLE_PRODUCTS, null, null, null, null, null, null);

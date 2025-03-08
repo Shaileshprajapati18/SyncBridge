@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+<com.google.android.material.card.MaterialCardView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:elevation="10dp"
+    android:layout_margin="5dp"
+    android:background="#211E1E">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:background="@drawable/rounded_card_background">
+        <ImageView
+            android:id="@+id/deviceImage"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/drive_c"
+            android:scaleType="centerCrop"
+            android:layout_marginTop="-10dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true" />
+
+        <TextView
+            android:id="@+id/deviceName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Local Disk(C:)"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#ffffff"
+            android:layout_toEndOf="@id/deviceImage"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:max="100"
+            android:progressDrawable="@drawable/progress_bar_custom"
+            android:layout_toEndOf="@id/deviceImage"
+            android:layout_below="@id/deviceName"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:progress="50" />
+        <TextView
+            android:id="@+id/onlineStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="106 GB free of 238 GB"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:layout_toEndOf="@id/deviceImage"
+            android:layout_below="@id/progressBar"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp" />
+
+    </RelativeLayout>
+</com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="10dp"
+        android:layout_margin="5dp"
+        android:background="#211E1E">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:background="@drawable/rounded_card_background">
+            <ImageView
+                android:id="@+id/deviceImage"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/drive_c"
+                android:scaleType="centerCrop"
+                android:layout_marginTop="-10dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true" />
+
+            <TextView
+                android:id="@+id/deviceName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Local Disk(D:)"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#ffffff"
+                android:layout_toEndOf="@id/deviceImage"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp" />
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:max="100"
+                android:progressDrawable="@drawable/progress_bar_custom"
+                android:layout_toEndOf="@id/deviceImage"
+                android:layout_below="@id/deviceName"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:progress="50" />
+            <TextView
+                android:id="@+id/onlineStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="106 GB free of 238 GB"
+                android:textSize="18sp"
+                android:textColor="@color/white"
+                android:layout_toEndOf="@id/deviceImage"
+                android:layout_below="@id/progressBar"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="4dp" />
+
+        </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</LinearLayout>

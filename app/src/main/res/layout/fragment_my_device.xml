@@ -5,9 +5,9 @@
     android:fitsSystemWindows="true"
     android:background="@color/black">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         android:layout_centerInParent="true"
         android:id="@+id/nofiles_textview"
         android:visibility="invisible"
@@ -16,7 +16,7 @@
     <LinearLayout
         android:id="@+id/title_storage"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:layout_marginBottom="10dp"
         android:background="@color/yellow"
         android:orientation="horizontal">
@@ -24,8 +24,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Internal Storage"
-            android:layout_marginTop="13dp"
+            android:text="My Files"
+            android:layout_marginTop="3dp"
             android:textSize="20sp"
             android:textStyle="bold"
             android:layout_marginStart="15dp"

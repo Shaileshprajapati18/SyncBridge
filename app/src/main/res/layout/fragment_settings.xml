@@ -51,11 +51,12 @@
                 android:layout_marginStart="10dp"
                 app:cardCornerRadius="50dp">
 
-                <ImageView
+                <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/profile"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
-                    android:src="@drawable/profile" />
+                    android:background="@color/black"
+                    />
 
             </com.google.android.material.card.MaterialCardView>
 

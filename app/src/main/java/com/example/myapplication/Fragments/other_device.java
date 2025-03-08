@@ -62,7 +62,6 @@ public class other_device extends Fragment implements deviceAdapter.OnItemClickL
     private static final int PERMISSION_REQUEST_CODE = 100;
     private FileData fileToDownload;
 
-    // SharedPreferences Keys
     private static final String PREFS_NAME = "MyAppPrefs";
     private static final String PREF_CURRENT_PATH = "currentPath";
     private static final String PREF_PATH_STACK = "pathStack";
@@ -85,15 +84,12 @@ public class other_device extends Fragment implements deviceAdapter.OnItemClickL
         progressBar = view.findViewById(R.id.progressBar);
         tvNoDevice = view.findViewById(R.id.tvNoDevice);
 
-        // Initialize RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new deviceAdapter(getContext(), fileList, this);
         recyclerView.setAdapter(adapter);
 
-        // Restore state from SharedPreferences
         restoreState();
 
-        // Fetch server URL from Firebase
         fetchServerUrl();
 
         return view;
@@ -368,7 +364,6 @@ public class other_device extends Fragment implements deviceAdapter.OnItemClickL
                 }
             }
 
-            // Check if storage access is granted
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
                 if (permissionResults.get(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(getContext(), "Storage permission denied. Cannot download files.", Toast.LENGTH_SHORT).show();
@@ -376,7 +371,6 @@ public class other_device extends Fragment implements deviceAdapter.OnItemClickL
                 }
             }
 
-            // Retry download if permissions are granted
             if (permissionResults.values().contains(PackageManager.PERMISSION_GRANTED) && fileToDownload != null) {
                 startFileDownload(fileToDownload); // Retry file download
             }
@@ -384,22 +378,17 @@ public class other_device extends Fragment implements deviceAdapter.OnItemClickL
     }
 
     private void performFileDownload(FileData file) {
-        // Build the file URL
         String fileUrl = serverUrl + "/download-file?file_path=" + currentPath + "/" + file.getName();
 
-        // Create DownloadManager request
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(fileUrl));
         request.setTitle("Downloading " + file.getName());
         request.setDescription("Downloading file...");
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
 
-        // Allow downloads over WiFi and Mobile networks
         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
 
-        // Set the destination for the downloaded file
         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, file.getName());
 
-        // Get the system DownloadManager service
         DownloadManager downloadManager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
 
         if (downloadManager != null) {
@@ -412,16 +401,16 @@ public class other_device extends Fragment implements deviceAdapter.OnItemClickL
     }
 
     private void navigateToHomeFragment() {
-        Fragment homeFragment = new home(); // Create an instance of your home fragment
+        Fragment homeFragment = new home();
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.open_screen, homeFragment) // Replace with the actual container id
+                .replace(R.id.open_screen, homeFragment)
                 .addToBackStack(null)
                 .commit();
     }
 
     public void handleBackPress() {
-        onBackPressed();  // Call the method that handles back press logic
+        onBackPressed();
     }
 
     @Override
@@ -431,7 +420,6 @@ public class other_device extends Fragment implements deviceAdapter.OnItemClickL
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        // Remove specific keys
         editor.remove(PREF_CURRENT_PATH);
         editor.remove(PREF_PATH_STACK);
 

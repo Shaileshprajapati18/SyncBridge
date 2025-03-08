@@ -7,16 +7,17 @@ public class RegisterModel {
     String phoneNumber;
     String email;
     String password;
+    private String profileImage;
 
     public RegisterModel() {
     }
-
-    public RegisterModel(String firstname, String lastname, String phoneNumber, String email, String password) {
+    public RegisterModel(String firstname, String lastname, String phoneNumber, String email, String password, String profileImage) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.password = password;
+        this.profileImage = profileImage;
     }
 
     public String getFirstname() {
@@ -57,5 +58,13 @@ public class RegisterModel {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
     }
 }

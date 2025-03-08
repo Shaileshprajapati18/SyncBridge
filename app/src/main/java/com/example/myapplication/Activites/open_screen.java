@@ -23,12 +23,11 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class open_screen extends AppCompatActivity {
 
     BottomNavigationView bottom_navigation;
-    home homeFragment = new home();
-    my_device myDeviceFragment = new my_device();
-    scanner scannerFragment = new scanner();
-    other_device otherDeviceFragment = new other_device();
-    settings settingsFragment = new settings();
-
+    private home homeFragment = new home();
+    private my_device myDeviceFragment = new my_device();
+    private scanner scannerFragment = new scanner();
+    private other_device otherDeviceFragment = new other_device();
+    private settings settingsFragment = new settings();
     private Fragment currentFragment;
 
     @Override
@@ -39,110 +38,82 @@ public class open_screen extends AppCompatActivity {
         bottom_navigation = findViewById(R.id.bottom_navigation);
 
         if (savedInstanceState == null) {
-            navigateToFragment(homeFragment, R.id.home_icon);
-        } else {
-            currentFragment = getSupportFragmentManager().findFragmentById(R.id.open_screen);
+
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.add(R.id.open_screen, homeFragment, "home");
+            transaction.add(R.id.open_screen, myDeviceFragment, "my_device").hide(myDeviceFragment);
+            transaction.add(R.id.open_screen, scannerFragment, "scanner").hide(scannerFragment);
+            transaction.add(R.id.open_screen, otherDeviceFragment, "other_device").hide(otherDeviceFragment);
+            transaction.add(R.id.open_screen, settingsFragment, "settings").hide(settingsFragment);
+            transaction.commit();
+            currentFragment = homeFragment;
         }
 
-        // BottomNavigationView listener
         bottom_navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int itemId = item.getItemId();
+                Fragment selectedFragment = null;
 
-                // Using if-else to set the fragment based on the selected item
                 if (itemId == R.id.home_icon) {
-                    navigateToFragment(homeFragment, itemId);
+                    selectedFragment = homeFragment;
                 } else if (itemId == R.id.my_device) {
-                    navigateToFragment(myDeviceFragment, itemId);
+                    selectedFragment = myDeviceFragment;
                 } else if (itemId == R.id.scanner) {
-                    navigateToFragment(scannerFragment, itemId);
+                    selectedFragment = scannerFragment;
                 } else if (itemId == R.id.other_device) {
-                    navigateToFragment(otherDeviceFragment, itemId);
+                    selectedFragment = otherDeviceFragment;
                 } else if (itemId == R.id.settings) {
-                    navigateToFragment(settingsFragment, itemId);
+                    selectedFragment = settingsFragment;
                 }
 
+                if (selectedFragment != null && selectedFragment != currentFragment) {
+                    switchFragment(selectedFragment);
+                    bottom_navigation.setSelectedItemId(itemId);
+                }
                 return true;
-            }
-        });
-
-        // Listen for back stack changes and update the BottomNavigationView selection
-        getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
-            @Override
-            public void onBackStackChanged() {
-                updateBottomNavigationViewSelection();
             }
         });
     }
 
-    // Method to navigate to fragments and update BottomNavigationView selection
-    private void navigateToFragment(Fragment fragment, int menuItemId) {
-        // Avoid reloading the same fragment
-        if (currentFragment != fragment) {
-            currentFragment = fragment;
+    public void switchFragment(Fragment fragment) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
-            // Check if the fragment is already added
-            if (fragment.isAdded()) {
-                // If the fragment is already added, just show it
-                transaction.show(fragment);
-            } else {
-                // If it's not added, replace it
-                transaction.replace(R.id.open_screen, fragment);
-
-                // Only add non-home fragments to the back stack
-                if (!(fragment instanceof home)) {
-                    transaction.addToBackStack(null);
-                }
-            }
-
-            transaction.commit();
-
-            // Immediately set the selected item
-            bottom_navigation.setSelectedItemId(menuItemId);
+        if (currentFragment != null) {
+            transaction.hide(currentFragment);
         }
+
+        transaction.show(fragment);
+        transaction.commit();
+
+        currentFragment = fragment;
+        updateBottomNavigationViewSelection();
     }
 
     @Override
     public void onBackPressed() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment currentFragment = fragmentManager.findFragmentById(R.id.open_screen);
-
-        // Check if the current fragment is the home fragment
-        if (currentFragment instanceof home) {
-            showExitConfirmationDialog(); // Show the exit confirmation dialog
-        } else if (currentFragment instanceof other_device) {
-            ((other_device) currentFragment).handleBackPress();
+        if (currentFragment != homeFragment) {
+            switchFragment(homeFragment);
+            bottom_navigation.setSelectedItemId(R.id.home_icon);
         } else {
-            // Pop the last fragment from the back stack
-            if (fragmentManager.getBackStackEntryCount() > 0) {
-                fragmentManager.popBackStack();
-            } else {
-                super.onBackPressed(); // Exit the app if no fragments in back stack
-            }
+            showExitConfirmationDialog();
         }
     }
 
-    // Method to update BottomNavigationView selection based on the current fragment
     private void updateBottomNavigationViewSelection() {
-        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.open_screen);
-
-        if (fragment instanceof home) {
+        if (currentFragment == homeFragment) {
             bottom_navigation.setSelectedItemId(R.id.home_icon);
-        } else if (fragment instanceof my_device) {
+        } else if (currentFragment == myDeviceFragment) {
             bottom_navigation.setSelectedItemId(R.id.my_device);
-        } else if (fragment instanceof scanner) {
+        } else if (currentFragment == scannerFragment) {
             bottom_navigation.setSelectedItemId(R.id.scanner);
-        } else if (fragment instanceof other_device) {
+        } else if (currentFragment == otherDeviceFragment) {
             bottom_navigation.setSelectedItemId(R.id.other_device);
-        } else if (fragment instanceof settings) {
+        } else if (currentFragment == settingsFragment) {
             bottom_navigation.setSelectedItemId(R.id.settings);
         }
     }
 
-    // Method to show an AlertDialog when exiting the app
     private void showExitConfirmationDialog() {
         View customDialogView = getLayoutInflater().inflate(R.layout.dialog_custom, null);
 
@@ -150,26 +121,23 @@ public class open_screen extends AppCompatActivity {
         Button negativeButton = customDialogView.findViewById(R.id.dialog_negative);
 
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setView(customDialogView)  // Set the custom layout as the dialog view
-                .setCancelable(false)       // Make the dialog non-cancelable by touching outside
+                .setView(customDialogView)
+                .setCancelable(false)
                 .create();
 
-        // Set the positive button click listener
         positiveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();  // Close the app
+                finish();
             }
         });
 
-        // Set the negative button click listener
         negativeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
             }
         });
-
         dialog.show();
     }
 }

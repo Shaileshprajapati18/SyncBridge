@@ -1,25 +1,30 @@
 package com.example.myapplication.Fragments;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StatFs;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.bumptech.glide.Glide;
+import com.example.myapplication.Activites.notification_Activity;
+import com.example.myapplication.Activites.open_screen;
+import com.example.myapplication.Model.Base64ToImageConverter;
 import com.example.myapplication.Model.DatabaseHelper;
 import com.example.myapplication.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -32,10 +37,16 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.io.File;
 
-public class home extends Fragment {
+import de.hdodenhof.circleimageview.CircleImageView;
 
-    DatabaseHelper databaseHelper;
-    TextView username;
+public class home extends Fragment {
+    private DatabaseHelper databaseHelper;
+    private TextView username;
+    private ImageView deviceImg, deviceImage2;
+    private DatabaseReference reference;
+    private String currentUserEmail;
+    private ValueEventListener valueEventListener;
+    private CircleImageView profileImage;
 
     public home() {
         // Required empty public constructor
@@ -47,87 +58,140 @@ public class home extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         username = view.findViewById(R.id.username);
-        String currentUserEmail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-        ImageView sideArrow=view.findViewById(R.id.sidearrow);
-        ImageView notification=view.findViewById(R.id.end_card);
+        deviceImg = view.findViewById(R.id.deviceImage);
+        deviceImage2 = view.findViewById(R.id.deviceImage2);
+        ImageView sideArrow = view.findViewById(R.id.sidearrow);
+        ImageView notification = view.findViewById(R.id.notification);
+        profileImage = view.findViewById(R.id.profile);
+
+        Glide.with(this).load(R.drawable.deviceimg).into(deviceImg);
+        Glide.with(this).load(R.drawable.deviceimg).into(deviceImage2);
         Glide.with(this).load(R.drawable.botification).into(notification);
         Glide.with(this).load(R.drawable.sidearrow).into(sideArrow);
 
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-
         databaseHelper = new DatabaseHelper(getContext());
-        productData();
+        currentUserEmail = FirebaseAuth.getInstance().getCurrentUser() != null ? FirebaseAuth.getInstance().getCurrentUser().getEmail() : null;
+        if (currentUserEmail == null) {
+            Log.e("HomeFragment", "Current user email is null, user might not be logged in");
+            Toast.makeText(getActivity(), "User not logged in", Toast.LENGTH_SHORT).show();
+            username.setText("Guest");
+            return view; // Exit early if no user is logged in
+        }
 
-        LinearLayout connect_device=view.findViewById(R.id.connect_device);
+        reference = FirebaseDatabase.getInstance().getReference("Users");
 
-        reference.addValueEventListener(new ValueEventListener() {
+        setupFirebaseListener();
+        setupNavigationButton(view);
+        setupStorageInfo(view);
+        loadLocalUserData();
+
+        notification.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), notification_Activity.class);
+            startActivity(intent);
+        });
+        return view;
+    }
+
+    private void setupFirebaseListener() {
+        valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 boolean userFound = false;
-
                 for (DataSnapshot userSnapshot : snapshot.getChildren()) {
                     String userEmail = userSnapshot.child("email").getValue(String.class);
                     if (currentUserEmail != null && currentUserEmail.equals(userEmail)) {
                         userFound = true;
-
                         String firstname = userSnapshot.child("firstname").getValue(String.class);
                         String lastname = userSnapshot.child("lastname").getValue(String.class);
                         String phoneNumber = userSnapshot.child("phoneNumber").getValue(String.class);
                         String email = userSnapshot.child("email").getValue(String.class);
+                        String imageBase64 = userSnapshot.child("profileImage").getValue(String.class);
 
-                        boolean isInserted = databaseHelper.insertOrUpdateProduct(firstname,lastname,phoneNumber,email);
-                        if (isInserted) {
+                        String imageFilePath = null;
+                        if (imageBase64 != null && getContext() != null) {
+                            // Check local database first
+                            Cursor cursor = databaseHelper.getReadableDatabase().rawQuery(
+                                    "SELECT " + DatabaseHelper.COLUMN_IMAGE + " FROM " + DatabaseHelper.TABLE_PRODUCTS +
+                                            " WHERE " + DatabaseHelper.COLUMN_EMAIL + " = ?",
+                                    new String[]{currentUserEmail});
+                            if (cursor != null && cursor.moveToFirst()) {
+                                imageFilePath = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_IMAGE));
+                                if (imageFilePath != null && !imageFilePath.isEmpty()) {
+                                    File imageFile = new File(imageFilePath);
+                                    if (imageFile.exists()) {
+                                        Bitmap bitmap = BitmapFactory.decodeFile(imageFilePath);
+                                        if (bitmap != null) {
+                                            profileImage.setImageBitmap(bitmap);
+                                            Log.d("HomeFragment", "Loaded local image from: " + imageFilePath);
+                                        }
+                                    }
+                                }
+                                cursor.close();
+                            }
+
+                            // If local file isn’t valid, convert Base64 from Firebase
+                            if (imageFilePath == null || !new File(imageFilePath).exists()) {
+                                File imageFile = Base64ToImageConverter.convertBase64ToImage(
+                                        getContext(), imageBase64, "profile_" + System.currentTimeMillis() + ".jpg");
+                                if (imageFile != null && imageFile.exists()) {
+                                    imageFilePath = imageFile.getAbsolutePath();
+                                    Bitmap bitmap = BitmapFactory.decodeFile(imageFilePath);
+                                    if (bitmap != null) {
+                                        Log.d("Base64ToImageConverter", "Image converted successfully");
+                                        profileImage.setImageBitmap(bitmap);
+                                    } else {
+                                        Log.e("Base64ToImageConverter", "Failed to convert base64 to image");
+                                        profileImage.setImageResource(R.color.black);
+                                    }
+                                } else {
+                                    Log.e("Base64ToImageConverter", "Failed to convert base64 to image");
+                                    profileImage.setImageResource(R.color.black);
+                                }
+                            }
+                        } else {
+                            profileImage.setImageResource(R.color.black);
                         }
-                        username.setText(firstname + " " + lastname);
-                        break;
+
+                        boolean success = databaseHelper.insertOrUpdateProduct(firstname, lastname, phoneNumber, email, imageFilePath);
+                        if (!success) {
+                            Log.e("DatabaseHelper", "Failed to insert or update product");
+                        }
+                        username.setText(firstname != null && lastname != null ? firstname + " " + lastname : "User");
+                        Log.d("HomeFragment", "Firebase updated - Username: " + username.getText());
+                        break; // Exit loop after finding the user
                     }
                 }
-
                 if (!userFound) {
-                    username.setText("User not found");
+                    Log.w("HomeFragment", "User not found in Firebase for email: " + currentUserEmail);
+                    username.setText("User"); // Default instead of "User not found"
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getActivity(), "Data not retrieved", Toast.LENGTH_SHORT).show();
+                Log.e("FirebaseError", "Database error: " + error.getMessage());
+                Toast.makeText(getActivity(), "Failed to load data", Toast.LENGTH_SHORT).show();
             }
-        });
+        };
+        reference.addValueEventListener(valueEventListener);
+    }
 
-        // Button to navigate to my_device fragment
+    private void setupNavigationButton(View view) {
         Button viewDetailButton = view.findViewById(R.id.view_detail);
-        connect_device.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Fragment scanner = new scanner();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.open_screen, scanner);
-                transaction.addToBackStack(null);
-                transaction.commit();
-            }
-        });
-        viewDetailButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Fragment myDeviceFragment = new my_device();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-
-                // Check if the fragment is already added
-                if (getFragmentManager().findFragmentById(R.id.open_screen) instanceof my_device) {
-                    return; // Fragment is already added; avoid adding it again
+        viewDetailButton.setOnClickListener(v -> {
+            open_screen activity = (open_screen) getActivity();
+            if (activity != null) {
+                my_device myDeviceFragment = new my_device();
+                if (!(activity.getSupportFragmentManager().findFragmentById(R.id.open_screen) instanceof my_device)) {
+                    activity.switchFragment(myDeviceFragment);
+                    BottomNavigationView bottomNavigationView = activity.findViewById(R.id.bottom_navigation);
+                    bottomNavigationView.setSelectedItemId(R.id.my_device);
                 }
-
-                transaction.replace(R.id.open_screen, myDeviceFragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
-
-                // Update bottom navigation view
-                BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.bottom_navigation);
-                bottomNavigationView.getMenu().findItem(R.id.my_device).setChecked(true);
             }
         });
+    }
 
-        // Fetch and display storage information
+    private void setupStorageInfo(View view) {
         TextView storageTextView = view.findViewById(R.id.storageTextView);
         ProgressBar storageProgressBar = view.findViewById(R.id.storageProgressBar);
         TextView progressText = view.findViewById(R.id.progress_text);
@@ -136,35 +200,83 @@ public class home extends Fragment {
         long availableStorage = getAvailableStorage();
         long usedStorage = totalStorage - availableStorage;
 
-        String storageInfo =  " Used "+": "+formatSize(usedStorage) +"\n" +""+" Total "+": " +formatSize(totalStorage) ;
+        String storageInfo = "Used: " + formatSize(usedStorage) + "\nTotal: " + formatSize(totalStorage);
         storageTextView.setText(storageInfo);
 
         int usedPercentage = (int) ((usedStorage * 100) / totalStorage);
         storageProgressBar.setProgress(usedPercentage);
         progressText.setText(usedPercentage + "%");
-
-        return view;
     }
 
-    // Method to get total storage (system + user)
+    private void loadLocalUserData() {
+        Cursor cursor = databaseHelper.getReadableDatabase().rawQuery(
+                "SELECT * FROM " + DatabaseHelper.TABLE_PRODUCTS + " WHERE " + DatabaseHelper.COLUMN_EMAIL + " = ?",
+                new String[]{currentUserEmail});
+        if (cursor != null) {
+            try {
+                if (cursor.moveToFirst()) {
+                    String firstName = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_FIRST_NAME));
+                    String lastName = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_LAST_NAME));
+                    Log.d("HomeFragment", "Local data found - FirstName: " + firstName + ", LastName: " + lastName);
+                    username.setText(firstName != null && lastName != null ? firstName + " " + lastName : "User");
+                    String imagePath = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_IMAGE));
+                    if (imagePath != null && !imagePath.isEmpty()) {
+                        File imageFile = new File(imagePath);
+                        if (imageFile.exists()) {
+                            try {
+                                Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
+                                if (bitmap != null) {
+                                    profileImage.setImageBitmap(bitmap);
+                                    profileImage.setVisibility(View.VISIBLE);
+                                } else {
+                                    Log.w("HomeFragment", "Failed to decode local image file: " + imagePath);
+                                    profileImage.setImageResource(R.color.black);
+                                }
+                            } catch (Exception e) {
+                                Log.e("HomeFragment", "Failed to load local profile image: " + e.getMessage());
+                                Toast.makeText(getActivity(),
+                                        "Failed to load profile image: " + e.getMessage(),
+                                        Toast.LENGTH_SHORT).show();
+                                profileImage.setImageResource(R.color.black);
+                            }
+                        } else {
+                            Log.w("HomeFragment", "Local image file not found: " + imagePath);
+                            profileImage.setImageResource(R.color.black);
+                        }
+                    } else {
+                        profileImage.setImageResource(R.color.black);
+                    }
+                } else {
+                    Log.w("HomeFragment", "No local data found for email: " + currentUserEmail);
+                    username.setText("Loading..."); // Temporary placeholder
+                    profileImage.setImageResource(R.color.black);
+                }
+            } catch (Exception e) {
+                Log.e("HomeFragment", "Error loading local data: " + e.getMessage());
+                username.setText("Loading...");
+                profileImage.setImageResource(R.color.black);
+            } finally {
+                cursor.close();
+            }
+        } else {
+            Log.e("HomeFragment", "Database cursor is null");
+            username.setText("Loading...");
+            profileImage.setImageResource(R.color.black);
+        }
+    }
+
     private long getTotalStorage() {
-        File path = Environment.getDataDirectory(); // This gets both system and internal storage
+        File path = Environment.getDataDirectory();
         StatFs statFs = new StatFs(path.getPath());
-        long blockSize = statFs.getBlockSizeLong();
-        long totalBlocks = statFs.getBlockCountLong();
-        return totalBlocks * blockSize;
+        return statFs.getBlockSizeLong() * statFs.getBlockCountLong();
     }
 
-    // Method to get available storage
     private long getAvailableStorage() {
-        File path = Environment.getDataDirectory(); // This gets both system and internal storage
+        File path = Environment.getDataDirectory();
         StatFs statFs = new StatFs(path.getPath());
-        long blockSize = statFs.getBlockSizeLong();
-        long availableBlocks = statFs.getAvailableBlocksLong();
-        return availableBlocks * blockSize;
+        return statFs.getBlockSizeLong() * statFs.getAvailableBlocksLong();
     }
 
-    // Method to format the size in human-readable form (e.g., MB, GB)
     private String formatSize(long size) {
         String[] units = {"B", "KB", "MB", "GB", "TB"};
         int unitIndex = 0;
@@ -174,21 +286,14 @@ public class home extends Fragment {
             sizeInUnits /= 1024;
             unitIndex++;
         }
-
         return String.format("%.2f %s", sizeInUnits, units[unitIndex]);
     }
-    private void productData() {
-        Cursor cursor = databaseHelper.viewData();
-        if (cursor.moveToFirst()) {
-            do {
 
-                String firstName = cursor.getString(cursor.getColumnIndexOrThrow("first_name"));
-                String lastName = cursor.getString(cursor.getColumnIndexOrThrow("last_name"));
-
-                username.setText(firstName + " " + lastName);
-            }
-            while (cursor.moveToNext());
-            cursor.close();
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (reference != null && valueEventListener != null) {
+            reference.removeEventListener(valueEventListener);
         }
     }
 }

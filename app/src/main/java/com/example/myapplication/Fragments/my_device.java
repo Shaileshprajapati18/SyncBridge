@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +21,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
 import com.example.myapplication.Adapters.myAdapter;
 import com.facebook.shimmer.ShimmerFrameLayout;
@@ -31,7 +33,7 @@ import java.util.concurrent.Executors;
 public class my_device extends Fragment {
 
     RecyclerView recyclerView;
-    TextView noFilesTextView;
+    ImageView noFilesTextView;
     ShimmerFrameLayout shimmerFrameLayout;
 
     private ExecutorService executorService;
@@ -54,7 +56,6 @@ public class my_device extends Fragment {
         } else {
             requestPermission();
         }
-
         return view;
     }
 
@@ -104,10 +105,11 @@ public class my_device extends Fragment {
                         shimmerFrameLayout.setVisibility(View.GONE);
                         if (files == null || files.length == 0) {
                             noFilesTextView.setVisibility(View.VISIBLE);
+                            Glide.with(getActivity()).load(R.drawable.nofiles).into(noFilesTextView);
                             recyclerView.setVisibility(View.GONE);
                         } else {
                             noFilesTextView.setVisibility(View.GONE);
-                           recyclerView.setVisibility(View.VISIBLE);
+                            recyclerView.setVisibility(View.VISIBLE);
 
                             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                             recyclerView.setAdapter(new myAdapter(getActivity(), files));

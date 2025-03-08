@@ -1,37 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Open Option -->
     <item
         android:id="@+id/action_open"
         android:icon="@drawable/ic_open"
         android:title="Open" />
 
-    <!-- Rename Option -->
     <item
         android:id="@+id/action_rename"
         android:icon="@drawable/ic_rename"
         android:title="Rename" />
 
-    <!-- Copy Option -->
     <item
         android:id="@+id/action_copy"
         android:icon="@drawable/ic_copy"
         android:title="Copy" />
 
-    <!-- Paste Option -->
     <item
         android:id="@+id/action_paste"
         android:icon="@drawable/ic_paste"
         android:title="Paste" />
 
-    <!-- Delete Option -->
     <item
         android:id="@+id/action_delete"
         android:icon="@drawable/ic_delete"
         android:title="Delete" />
 
-    <!-- Share Option -->
     <item
         android:id="@+id/action_share"
         android:icon="@drawable/ic_share"
