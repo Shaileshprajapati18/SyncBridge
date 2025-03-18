@@ -1,47 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/rounded_card_background"
-    android:orientation="vertical"
-    android:padding="15dp">
-
-<TextView
-android:id="@+id/dialog_message"
-android:layout_width="wrap_content"
-android:layout_height="wrap_content"
-android:text="Are you sure you want to close the app?"
-android:textSize="17sp"
-android:textColor="@android:color/white"
-android:layout_gravity="center"
- />
-
-<LinearLayout
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="end"
-    android:layout_marginTop="20dp"
-    android:orientation="horizontal">
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="10dp">
 
-<Button
-    android:id="@+id/dialog_positive"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="Close"
-    android:backgroundTint="@color/white"
-    android:textColor="@color/black"
-    app:cornerRadius="8dp"
-    android:layout_marginEnd="8dp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp">
 
-<Button
-    android:id="@+id/dialog_negative"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:backgroundTint="@color/white"
-    android:textColor="@color/black"
-    app:cornerRadius="8dp"
-    android:text="Cancel" />
-</LinearLayout>
+        <TextView
+            android:id="@+id/dialog_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Are you sure you want to close the app?"
+            android:textSize="15sp"
+            android:textColor="@android:color/black"
+            />
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/dialog_positive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Close"
+                android:backgroundTint="@color/blue"
+                android:textColor="@color/white"
+                app:cornerRadius="8dp"
+                android:layout_marginEnd="8dp" />
+
+            <Button
+                android:id="@+id/dialog_negative"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/grey"
+                android:textColor="@color/black"
+                app:cornerRadius="8dp"
+                android:text="Cancel" />
+        </LinearLayout>
     </LinearLayout>
+</androidx.cardview.widget.CardView>

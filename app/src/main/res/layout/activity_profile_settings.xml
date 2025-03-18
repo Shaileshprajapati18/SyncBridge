@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="@color/yellow"
-    tools:context=".Activites.profile_settings">
+    android:background="@color/blue"
+    tools:context=".Activities.profile_settings">
 
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/title"
@@ -15,7 +15,7 @@
         app:fabCradleMargin="10dp"
         app:fabCradleRoundedCornerRadius="10dp"
         app:fabCradleVerticalOffset="10dp"
-        app:backgroundTint="@color/yellow"
+        app:backgroundTint="@color/blue"
         app:actionMenuTextColor="@color/white">
 
         <ImageView
@@ -24,7 +24,7 @@
             android:layout_height="24dp"
             android:layout_marginEnd="10dp"
             android:src="@drawable/arrow_back"
-            app:tint="@color/black" />
+            app:tint="@color/white" />
 
         <TextView
             android:layout_width="match_parent"
@@ -32,7 +32,7 @@
             android:layout_marginTop="5dp"
             android:fontFamily="@font/star"
             android:text="Profile Settings"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -42,7 +42,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/title"
-        android:background="@color/black">
+        android:background="@color/background">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -64,7 +64,7 @@
                     android:layout_width="140dp"
                     android:src="@drawable/profile"
                     android:layout_height="140dp"
-                    android:background="@color/black" />
+                    android:background="@color/background" />
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/add_icon"
@@ -74,7 +74,6 @@
                     android:layout_alignEnd="@id/profile"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="3dp"
-                    android:tint="@color/black"
                     android:src="@drawable/add_circle"
                      />
 
@@ -110,7 +109,7 @@
                         android:elevation="10dp"
                         android:maxLines="2"
                         android:text=""
-                        android:textColor="@android:color/white"
+                        android:textColor="@android:color/black"
                         android:textSize="20sp"
                         android:textStyle="bold" />
 
@@ -138,7 +137,7 @@
                         android:elevation="10dp"
                         android:maxLines="2"
                         android:text=""
-                        android:textColor="@android:color/white"
+                        android:textColor="@android:color/black"
                         android:textSize="20sp"
                         android:textStyle="bold" />
 
@@ -167,7 +166,7 @@
                     android:elevation="10dp"
                     android:maxLines="2"
                     android:text=""
-                    android:textColor="@android:color/white"
+                    android:textColor="@android:color/black"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -208,7 +207,7 @@
                         android:scrollbars="none"
                         android:text=""
                         android:scrollbarAlwaysDrawVerticalTrack="false"
-                        android:textColor="@android:color/white"
+                        android:textColor="@android:color/black"
                         android:textSize="20sp"
                         android:textStyle="bold" />
                 </HorizontalScrollView>
@@ -223,9 +222,9 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
                     android:textStyle="bold"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:padding="10dp"
-                    android:backgroundTint="@color/yellow"
+                    android:backgroundTint="@color/blue"
                     android:background="@drawable/rounded_button_background"
                     android:textSize="16dp"
                     />

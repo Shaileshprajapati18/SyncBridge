@@ -10,8 +10,6 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,7 +19,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
+import com.airbnb.lottie.LottieAnimationView;
 import com.example.myapplication.R;
 import com.example.myapplication.Adapters.myAdapter;
 import com.facebook.shimmer.ShimmerFrameLayout;
@@ -33,7 +31,7 @@ import java.util.concurrent.Executors;
 public class my_device extends Fragment {
 
     RecyclerView recyclerView;
-    ImageView noFilesTextView;
+    LottieAnimationView noFilesTextView;
     ShimmerFrameLayout shimmerFrameLayout;
 
     private ExecutorService executorService;
@@ -82,15 +80,14 @@ public class my_device extends Fragment {
                 startActivityForResult(intent, 1);
             }
         } else {
-
             ActivityCompat.requestPermissions(getActivity(), new String[]{
                     android.Manifest.permission.READ_EXTERNAL_STORAGE,
                     android.Manifest.permission.WRITE_EXTERNAL_STORAGE
             }, 1);
         }
     }
-    private void displayFiles() {
 
+    private void displayFiles() {
         executorService.execute(new Runnable() {
             @Override
             public void run() {
@@ -101,14 +98,14 @@ public class my_device extends Fragment {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-
                         shimmerFrameLayout.setVisibility(View.GONE);
                         if (files == null || files.length == 0) {
                             noFilesTextView.setVisibility(View.VISIBLE);
-                            Glide.with(getActivity()).load(R.drawable.nofiles).into(noFilesTextView);
+                            noFilesTextView.playAnimation(); // Play Lottie animation instead of Glide
                             recyclerView.setVisibility(View.GONE);
                         } else {
                             noFilesTextView.setVisibility(View.GONE);
+                            noFilesTextView.cancelAnimation(); // Stop animation when files are present
                             recyclerView.setVisibility(View.VISIBLE);
 
                             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));

@@ -1,22 +1,17 @@
-package com.example.myapplication.Activites;
+package com.example.myapplication.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
-import android.animation.ArgbEvaluator;
-import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.text.Spannable;
-import android.text.SpannableString;
+import android.text.InputType;
 import android.text.TextUtils;
-import android.text.style.ForegroundColorSpan;
 import android.util.Patterns;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -33,9 +28,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.hbb20.CountryCodePicker;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 public class activity_register extends AppCompatActivity {
 
     private EditText emailField, passwordField, firstNameField, lastNameField, phoneField;
@@ -45,6 +37,7 @@ public class activity_register extends AppCompatActivity {
     private CountryCodePicker countryCodePicker;
     DatabaseReference reference;
     ProgressBar progressBar;
+    private boolean isPasswordVisible = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +56,45 @@ public class activity_register extends AppCompatActivity {
         loginRedirect = findViewById(R.id.loginRedirect);
         countryCodePicker = findViewById(R.id.countryCodePicker);
         progressBar=findViewById(R.id.progressbar);
+
+
+        passwordField.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    // Get the right drawable (drawableEnd)
+                    if (passwordField.getCompoundDrawables()[2] != null) {
+                        // Check if the touch is within the bounds of the right drawable
+                        if (event.getRawX() >= (passwordField.getRight() - passwordField.getCompoundDrawables()[2].getBounds().width())) {
+                            if (isPasswordVisible) {
+                                // Hide password
+                                passwordField.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                                passwordField.setCompoundDrawablesWithIntrinsicBounds(
+                                        ContextCompat.getDrawable(activity_register.this, R.drawable.baseline_lock_24),
+                                        null,
+                                        ContextCompat.getDrawable(activity_register.this, R.drawable.visibility),
+                                        null
+                                );
+                            } else {
+                                // Show password
+                                passwordField.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                                passwordField.setCompoundDrawablesWithIntrinsicBounds(
+                                        ContextCompat.getDrawable(activity_register.this, R.drawable.baseline_lock_24),
+                                        null,
+                                        ContextCompat.getDrawable(activity_register.this, R.drawable.visibility_off),
+                                        null
+                                );
+                            }
+                            isPasswordVisible = !isPasswordVisible;
+                            // Move cursor to the end of the text
+                            passwordField.setSelection(passwordField.getText().length());
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+        });
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override

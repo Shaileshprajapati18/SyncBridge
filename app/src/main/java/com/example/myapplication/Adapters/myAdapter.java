@@ -1,15 +1,22 @@
 package com.example.myapplication.Adapters;
 
-import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.pdf.PdfRenderer;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.ParcelFileDescriptor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -20,7 +27,8 @@ import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.myapplication.Activites.storageViewer;
+import com.bumptech.glide.Glide;
+import com.example.myapplication.Activities.storageViewer;
 import com.example.myapplication.R;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
@@ -36,14 +44,13 @@ public class myAdapter extends RecyclerView.Adapter<myAdapter.ViewHolder> {
     private final Context context;
     private File[] files;
     private File currentDirectory;
-    private File pastedDirectory;
-    private Map<File, String> fileSizeCache = new HashMap<>();
     private static File fileToCopy = null;
+    private Map<File, String> fileSizeCache = new HashMap<>();
 
     public myAdapter(Context context, File[] files) {
         this.context = context;
-        this.files = files;
-        this.currentDirectory = files != null && files.length > 0 ? files[0].getParentFile() : null;
+        this.files = files != null ? files : new File[0];
+        this.currentDirectory = (files != null && files.length > 0) ? files[0].getParentFile() : null;
         loadFileSizesInBackground();
     }
 
@@ -65,7 +72,40 @@ public class myAdapter extends RecyclerView.Adapter<myAdapter.ViewHolder> {
             holder.fileInfoLayout.setVisibility(View.VISIBLE);
             holder.verticalLine.setVisibility(View.VISIBLE);
         } else {
-            holder.imageView.setImageResource(R.drawable.file);
+            String fileName = file.getName().toLowerCase();
+            if (fileName.endsWith(".jpg") || fileName.endsWith(".jpeg") || fileName.endsWith(".png")) {
+                Glide.with(context)
+                        .load(file)
+                        .centerCrop()
+                        .placeholder(R.drawable.file)
+                        .into(holder.imageView);
+            } else if (fileName.endsWith(".pdf")) {
+                new LoadPdfThumbnailTask(context, holder.imageView).execute(file);
+            } else if (fileName.endsWith(".doc") || fileName.endsWith(".docx")) {
+                holder.imageView.setImageResource(R.drawable.ic_docx);
+            } else if (fileName.endsWith(".ppt") || fileName.endsWith(".pptx")) {
+                holder.imageView.setImageResource(R.drawable.ic_pptx);
+            } else if (fileName.endsWith(".xls") || fileName.endsWith(".xlsx")) {
+                holder.imageView.setImageResource(R.drawable.ic_xlsx);
+            } else if (fileName.endsWith(".mp3") || fileName.endsWith(".wav") || fileName.endsWith(".aac") || fileName.endsWith(".m4a")) {
+                holder.imageView.setImageResource(R.drawable.ic_audio);
+            }
+            else if (fileName.endsWith(".mp4") || fileName.endsWith(".mkv") || fileName.endsWith(".avi") || fileName.endsWith(".3gp")) {
+                holder.imageView.setImageResource(R.drawable.ic_video);
+            }
+            else if (fileName.endsWith(".apk")) {
+                holder.imageView.setImageResource(R.drawable.ic_apk);
+            }
+            else if (fileName.endsWith(".zip")){
+                holder.imageView.setImageResource(R.drawable.ic_zip);
+            }
+            else if (fileName.endsWith(".rar")){
+                holder.imageView.setImageResource(R.drawable.ic_rar);
+            }
+            else {
+                holder.imageView.setImageResource(R.drawable.file);
+            }
+
             holder.itemCountTextView.setText("");
             holder.verticalLine.setVisibility(View.GONE);
             holder.fileInfoLayout.setVisibility(View.VISIBLE);
@@ -74,11 +114,10 @@ public class myAdapter extends RecyclerView.Adapter<myAdapter.ViewHolder> {
         if (fileSizeCache.containsKey(file)) {
             holder.fileSizeTextView.setText(fileSizeCache.get(file));
         } else {
-            holder.fileSizeTextView.setText("Loading...");
+            holder.fileSizeTextView.setText("...");
         }
 
         holder.itemView.setOnClickListener(v -> openFile(file));
-
         holder.itemView.setOnLongClickListener(v -> {
             showBottomSheet(file, holder, position);
             return true;
@@ -87,12 +126,12 @@ public class myAdapter extends RecyclerView.Adapter<myAdapter.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return files != null ? files.length : 0;
+        return files.length;
     }
 
     public void setFiles(File[] files) {
-        this.files = files;
-        this.currentDirectory = files != null && files.length > 0 ? files[0].getParentFile() : null;
+        this.files = files != null ? files : new File[0];
+        this.currentDirectory = (files != null && files.length > 0) ? files[0].getParentFile() : null;
         fileSizeCache.clear();
         loadFileSizesInBackground();
         notifyDataSetChanged();
@@ -128,11 +167,68 @@ public class myAdapter extends RecyclerView.Adapter<myAdapter.ViewHolder> {
         }
     }
 
+    private static class LoadPdfThumbnailTask extends AsyncTask<File, Void, Bitmap> {
+        private final Context context;
+        private final ImageView imageView;
+        private boolean isCancelled = false;
+
+        LoadPdfThumbnailTask(Context context, ImageView imageView) {
+            this.context = context.getApplicationContext();
+            this.imageView = imageView;
+        }
+
+        @Override
+        protected Bitmap doInBackground(File... files) {
+            File file = files[0];
+            ParcelFileDescriptor pfd = null;
+            PdfRenderer renderer = null;
+            try {
+                pfd = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY);
+                renderer = new PdfRenderer(pfd);
+                PdfRenderer.Page page = renderer.openPage(0);
+                Bitmap bitmap = Bitmap.createBitmap(page.getWidth(), page.getHeight(), Bitmap.Config.ARGB_8888);
+                page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
+                page.close();
+                return bitmap;
+            } catch (IOException | SecurityException e) {
+                e.printStackTrace();
+                return null;
+            } finally {
+                try {
+                    if (renderer != null) renderer.close();
+                    if (pfd != null) pfd.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            if (isCancelled || context == null || imageView.getContext() instanceof android.app.Activity && ((android.app.Activity) imageView.getContext()).isDestroyed()) {
+                return;
+            }
+
+            if (bitmap != null) {
+                Glide.with(context)
+                        .load(bitmap)
+                        .centerCrop()
+                        .into(imageView);
+            } else {
+                imageView.setImageResource(R.drawable.ic_pdf);
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            isCancelled = true;
+        }
+    }
+
     private void showBottomSheet(File file, ViewHolder holder, int position) {
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(context);
         View bottomSheetView = LayoutInflater.from(context).inflate(R.layout.bottom_sheet_layout, null);
 
-        // Initialize bottom sheet menu items
         LinearLayout openItem = bottomSheetView.findViewById(R.id.bottom_sheet_open);
         LinearLayout renameItem = bottomSheetView.findViewById(R.id.bottom_sheet_rename);
         LinearLayout copyItem = bottomSheetView.findViewById(R.id.bottom_sheet_copy);
@@ -158,7 +254,7 @@ public class myAdapter extends RecyclerView.Adapter<myAdapter.ViewHolder> {
         });
 
         pasteItem.setOnClickListener(v -> {
-            promptPasteAction(position);
+            promptPasteAction(file);
             bottomSheetDialog.dismiss();
         });
 
@@ -213,75 +309,103 @@ public class myAdapter extends RecyclerView.Adapter<myAdapter.ViewHolder> {
     }
 
     private void renameFile(File file, ViewHolder holder) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Rename");
-        final EditText input = new EditText(context);
-        input.setText(file.getName());
-        builder.setView(input);
+        Dialog customDialog = new Dialog(context);
+        customDialog.setContentView(R.layout.custom_dialog_layout);
 
-        builder.setPositiveButton("Rename", (dialog, which) -> {
+        TextView title = customDialog.findViewById(R.id.dialog_title);
+        EditText input = customDialog.findViewById(R.id.dialog_input);
+        Button cancel = customDialog.findViewById(R.id.dialog_cancel);
+        Button confirm = customDialog.findViewById(R.id.dialog_confirm);
+
+        title.setText("Rename");
+        input.setVisibility(View.VISIBLE);
+        input.setText(file.getName());
+
+        confirm.setText("Rename");
+        confirm.setOnClickListener(v -> {
             String newName = input.getText().toString().trim();
             if (!newName.isEmpty()) {
                 File newFile = new File(file.getParent(), newName);
-                boolean renamed = file.renameTo(newFile);
-                if (renamed) {
+                if (file.renameTo(newFile)) {
                     Toast.makeText(context, "File renamed", Toast.LENGTH_SHORT).show();
                     refreshCurrentDirectory();
                 } else {
                     Toast.makeText(context, "Failed to rename", Toast.LENGTH_SHORT).show();
                 }
             }
+            customDialog.dismiss();
         });
-        builder.setNegativeButton("Cancel", null);
-        builder.show();
+
+        cancel.setOnClickListener(v -> customDialog.dismiss());
+
+        customDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        customDialog.show();
+
+        WindowManager.LayoutParams params = customDialog.getWindow().getAttributes();
+        params.width = WindowManager.LayoutParams.MATCH_PARENT;
+        customDialog.getWindow().setAttributes(params);
     }
 
-    private void promptPasteAction(int position) {
+    private void promptPasteAction(File destination) {
         if (fileToCopy == null) {
             Toast.makeText(context, "No file to paste", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Paste File");
-        builder.setMessage("Do you want to paste the copied file/directory here?");
-        builder.setPositiveButton("Yes", (dialog, which) -> pasteFile(files[position]));
-        builder.setNegativeButton("No", null);
-        builder.show();
+        Dialog customDialog = new Dialog(context);
+        customDialog.setContentView(R.layout.custom_dialog_layout);
+
+        TextView title = customDialog.findViewById(R.id.dialog_title);
+        TextView message = customDialog.findViewById(R.id.dialog_message);
+        Button cancel = customDialog.findViewById(R.id.dialog_cancel);
+        Button confirm = customDialog.findViewById(R.id.dialog_confirm);
+
+        title.setText("Paste File");
+        message.setVisibility(View.VISIBLE);
+        message.setText("Do you want to paste the copied file/directory here?");
+
+        confirm.setText("Yes");
+        confirm.setOnClickListener(v -> {
+            pasteFile(destination);
+            customDialog.dismiss();
+        });
+
+        cancel.setText("No");
+        cancel.setOnClickListener(v -> customDialog.dismiss());
+
+        customDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        customDialog.show();
+
+        WindowManager.LayoutParams params = customDialog.getWindow().getAttributes();
+        params.width = WindowManager.LayoutParams.MATCH_PARENT;
+        customDialog.getWindow().setAttributes(params);
     }
 
-    private void pasteFile(File destinationFolder) {
-        if (fileToCopy != null && destinationFolder.isDirectory()) {
-            File newFile = new File(destinationFolder, fileToCopy.getName());
-            File parentDirectory = destinationFolder.getParentFile();
-            if (fileToCopy.isDirectory()) {
-                boolean directoryCreated = newFile.mkdir();
-                newFile.setWritable(true, false);
-                if (directoryCreated) {
-                    copyDirectoryContents(fileToCopy, newFile);
-                    Toast.makeText(context, "Folder pasted", Toast.LENGTH_SHORT).show();
-                    File[] updatedFiles = parentDirectory != null ? parentDirectory.listFiles() : null;
-                    if (updatedFiles != null) {
-                        setFiles(updatedFiles);
-                    }
-                } else {
-                    Toast.makeText(context, "Failed to paste folder", Toast.LENGTH_SHORT).show();
-                }
+    private void pasteFile(File destination) {
+        if (fileToCopy == null) {
+            Toast.makeText(context, "No file to paste", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        File destinationFolder = destination.isDirectory() ? destination : destination.getParentFile();
+        File newFile = new File(destinationFolder, fileToCopy.getName());
+
+        if (fileToCopy.isDirectory()) {
+            if (newFile.mkdir()) {
+                copyDirectoryContents(fileToCopy, newFile);
+                Toast.makeText(context, "Folder pasted", Toast.LENGTH_SHORT).show();
+                refreshCurrentDirectory();
             } else {
-                try {
-                    Files.copy(fileToCopy.toPath(), newFile.toPath());
-                    Toast.makeText(context, "File pasted", Toast.LENGTH_SHORT).show();
-                    File[] updatedFiles = parentDirectory != null ? parentDirectory.listFiles() : null;
-                    if (updatedFiles != null) {
-                        setFiles(updatedFiles);
-                    }
-                } catch (IOException e) {
-                    Toast.makeText(context, "Failed to paste file", Toast.LENGTH_SHORT).show();
-                }
+                Toast.makeText(context, "Failed to paste folder", Toast.LENGTH_SHORT).show();
             }
-            currentDirectory = destinationFolder;
         } else {
-            Toast.makeText(context, "Cannot paste here, not a directory", Toast.LENGTH_SHORT).show();
+            try {
+                Files.copy(fileToCopy.toPath(), newFile.toPath());
+                Toast.makeText(context, "File pasted", Toast.LENGTH_SHORT).show();
+                refreshCurrentDirectory();
+            } catch (IOException e) {
+                Toast.makeText(context, "Failed to paste file", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -305,28 +429,47 @@ public class myAdapter extends RecyclerView.Adapter<myAdapter.ViewHolder> {
     }
 
     private void deleteFile(File file, ViewHolder holder) {
-        new AlertDialog.Builder(context)
-                .setTitle("Delete")
-                .setMessage("Are you sure you want to delete this " + (file.isDirectory() ? "folder?" : "file?"))
-                .setPositiveButton("Yes", (dialog, which) -> {
-                    if (file.isDirectory()) {
-                        if (deleteDirectory(file)) {
-                            Toast.makeText(context, "Folder deleted", Toast.LENGTH_SHORT).show();
-                            refreshCurrentDirectory();
-                        } else {
-                            Toast.makeText(context, "Failed to delete folder", Toast.LENGTH_SHORT).show();
-                        }
-                    } else {
-                        if (file.delete()) {
-                            Toast.makeText(context, "File deleted", Toast.LENGTH_SHORT).show();
-                            refreshCurrentDirectory();
-                        } else {
-                            Toast.makeText(context, "Failed to delete file", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                })
-                .setNegativeButton("No", null)
-                .show();
+        Dialog customDialog = new Dialog(context);
+        customDialog.setContentView(R.layout.custom_dialog_layout);
+
+        TextView title = customDialog.findViewById(R.id.dialog_title);
+        TextView message = customDialog.findViewById(R.id.dialog_message);
+        Button cancel = customDialog.findViewById(R.id.dialog_cancel);
+        Button confirm = customDialog.findViewById(R.id.dialog_confirm);
+
+        title.setText("Delete");
+        message.setVisibility(View.VISIBLE);
+        message.setText("Are you sure you want to delete this " + (file.isDirectory() ? "folder?" : "file?"));
+
+        confirm.setText("Yes");
+        confirm.setOnClickListener(v -> {
+            if (file.isDirectory()) {
+                if (deleteDirectory(file)) {
+                    Toast.makeText(context, "Folder deleted", Toast.LENGTH_SHORT).show();
+                    refreshCurrentDirectory();
+                } else {
+                    Toast.makeText(context, "Failed to delete folder", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                if (file.delete()) {
+                    Toast.makeText(context, "File deleted", Toast.LENGTH_SHORT).show();
+                    refreshCurrentDirectory();
+                } else {
+                    Toast.makeText(context, "Failed to delete file", Toast.LENGTH_SHORT).show();
+                }
+            }
+            customDialog.dismiss();
+        });
+
+        cancel.setText("No");
+        cancel.setOnClickListener(v -> customDialog.dismiss());
+
+        customDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        customDialog.show();
+
+        WindowManager.LayoutParams params = customDialog.getWindow().getAttributes();
+        params.width = WindowManager.LayoutParams.MATCH_PARENT;
+        customDialog.getWindow().setAttributes(params);
     }
 
     private boolean deleteDirectory(File directory) {

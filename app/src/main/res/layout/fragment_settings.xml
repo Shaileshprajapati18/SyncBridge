@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/black"
+    android:background="@color/background"
     tools:context=".Fragments.settings">
 
     <com.google.android.material.bottomappbar.BottomAppBar
@@ -14,16 +14,16 @@
         app:fabCradleMargin="10dp"
         app:fabCradleRoundedCornerRadius="10dp"
         app:fabCradleVerticalOffset="10dp"
-        app:backgroundTint="@color/yellow"
+        app:backgroundTint="@color/blue"
         app:actionMenuTextColor="@color/white">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Settings"
+            android:text="Profile"
             android:textStyle="bold"
             android:layout_marginTop="5dp"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="20sp"
             android:fontFamily="@font/star"/>
 
@@ -41,31 +41,34 @@
             android:padding="10dp"
             android:layout_margin="10dp"
             android:layout_marginTop="10dp"
-            android:orientation="horizontal">
+            android:gravity="center_vertical"
+            android:orientation="vertical">
 
-            <com.google.android.material.card.MaterialCardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/start_card"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 app:cardElevation="10dp"
+                android:layout_gravity="center"
                 android:layout_marginStart="10dp"
                 app:cardCornerRadius="50dp">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/profile"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
                     android:src="@drawable/profile"
                     android:background="@color/black"
                     />
 
-            </com.google.android.material.card.MaterialCardView>
+            </androidx.cardview.widget.CardView>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
+                android:gravity="center"
                 android:orientation="vertical">
             <TextView
                 android:id="@+id/username"
@@ -75,7 +78,7 @@
                 android:elevation="10dp"
                 android:textSize="18sp"
                 android:maxLines="1"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:textStyle="bold"
                 />
 
@@ -87,36 +90,43 @@
                     android:elevation="10dp"
                     android:layout_marginTop="2dp"
                     android:textSize="14sp"
-                    android:textColor="@color/grey"
+                    android:textColor="@color/dark_grey"
                     />
 
                 <TextView
                     android:id="@+id/full_details"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Profile Settings"
+                    android:text="Edit Profile"
                     android:textAlignment="center"
-                    android:textColor="@color/yellow"
+                    android:textColor="@color/white"
                     android:padding="8dp"
                     android:layout_marginTop="10dp"
-                    android:backgroundTint="@color/yellow"
-                    android:background="@drawable/name_overlay"
+                    android:backgroundTint="@color/blue"
+                    android:background="@drawable/rounded_button_background"
                     android:textSize="14sp"
                     />
 
             </LinearLayout>
         </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="5dp"
-            android:background="#232222"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:layout_marginStart="10dp"
+            android:textSize="20dp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:text="Inventories"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
+            android:background="@drawable/backgroung_overlay"
             android:orientation="vertical">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -128,14 +138,14 @@
                 android:layout_height="35dp"
                 android:src="@drawable/copy"
                 android:padding="5dp"
-                android:backgroundTint="@color/black"
+                app:tint="@color/black"
                 />
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="Use copy paste service"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="20dp"
                 android:layout_marginStart="10dp"
                 android:layout_weight="1"
@@ -146,9 +156,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:thumbTint="@color/switch_thumb_color"
-                android:trackTint="@color/white"
+                android:trackTint="@color/black"
                 android:checked="true"
-                android:layout_gravity="end"/> <!-- Align the Switch to the end -->
+                android:layout_gravity="end"/>
 
         </LinearLayout>
 
@@ -163,7 +173,7 @@
                 android:layout_height="35dp"
                 android:src="@drawable/access_file"
                 android:padding="5dp"
-                android:backgroundTint="@color/black"
+                app:tint="@color/black"
                 />
 
 
@@ -171,7 +181,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="Access of your data"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="20dp"
                 android:layout_marginStart="10dp"
                 android:layout_weight="1"
@@ -182,7 +192,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:thumbTint="@color/switch_thumb_color"
-                android:trackTint="@color/white"
+                android:trackTint="@color/black"
                 android:checked="true"
                 android:layout_gravity="end"/> <!-- Align the Switch to the end -->
 
@@ -198,9 +208,9 @@
             <ImageView
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                android:src="@drawable/link_device"
+                android:src="@drawable/linked_device"
                 android:padding="5dp"
-                android:backgroundTint="@color/black"
+                app:tint="@color/black"
                 />
 
 
@@ -208,7 +218,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="Manage linked device"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="20dp"
                 android:layout_marginStart="10dp"
                 android:layout_weight="1"
@@ -219,7 +229,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:thumbTint="@color/switch_thumb_color"
-                android:trackTint="@color/white"
+                android:trackTint="@color/black"
                 android:checked="true"
                 android:layout_gravity="end"/> <!-- Align the Switch to the end -->
 
@@ -228,15 +238,22 @@
 
 </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="5dp"
-            android:background="#232222"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:layout_marginStart="10dp"
+            android:textSize="20dp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:text="Preferences"/>
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
+            android:background="@drawable/backgroung_overlay"
             android:orientation="vertical">
             <LinearLayout
                 android:id="@+id/send_message_textview"
@@ -250,14 +267,14 @@
                     android:layout_height="35dp"
                     android:src="@drawable/message"
                     android:padding="5dp"
-                    android:backgroundTint="@color/black"
+                    app:tint="@color/black"
                     />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="Send us a message"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:textSize="20dp"
                     android:layout_marginStart="10dp"
                     android:layout_weight="1"
@@ -266,6 +283,7 @@
                 <ImageView
                     android:layout_width="30dp"
                     android:layout_height="30dp"
+                    app:tint="@color/black"
                     android:src="@drawable/arrow"/>
             </LinearLayout>
 
@@ -281,7 +299,7 @@
                     android:layout_height="35dp"
                     android:src="@drawable/about_us"
                     android:padding="5dp"
-                    android:backgroundTint="@color/black"
+                    app:tint="@color/black"
                     />
 
 
@@ -289,7 +307,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="About us"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:textSize="20dp"
                     android:layout_marginStart="10dp"
                     android:layout_weight="1"
@@ -298,69 +316,25 @@
                 <ImageView
                     android:layout_width="30dp"
                     android:layout_height="30dp"
+                    app:tint="@color/black"
                     android:src="@drawable/arrow"/>
 
             </LinearLayout>
-
-
-            <LinearLayout
-                android:id="@+id/faqs"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:src="@drawable/faqs"
-                    android:padding="5dp"
-                    android:backgroundTint="@color/black"
-                    />
-
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="FAQs"
-                    android:textColor="@color/white"
-                    android:textSize="20dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_weight="1"
-                    android:gravity="start"/>
-
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:src="@drawable/arrow"/>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="5dp"
-            android:background="#232222"/>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_margin="25dp"
-            android:gravity="center_vertical">
-
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/logout"
-                android:tint="@color/yellow"
-                android:layout_marginEnd="8dp"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="horizontal"
+                android:padding="10dp"
+                android:layout_marginStart="5dp"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/logout"
+                    app:tint="#FF1717"
+                    android:layout_marginEnd="8dp"/>
 
                 <TextView
                     android:id="@+id/Logout"
@@ -369,16 +343,12 @@
                     android:text="Logout"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    android:textColor="@color/yellow"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/grey"
-                    android:text="Exit from your account"/>
+                    android:textColor="#FF1717"/>
 
             </LinearLayout>
+
         </LinearLayout>
+
     </LinearLayout>
 
 

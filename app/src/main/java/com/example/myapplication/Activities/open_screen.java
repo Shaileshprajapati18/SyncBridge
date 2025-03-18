@@ -1,9 +1,11 @@
-package com.example.myapplication.Activites;
+package com.example.myapplication.Activities;
 
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 
 import androidx.annotation.NonNull;
@@ -29,6 +31,7 @@ public class open_screen extends AppCompatActivity {
     private other_device otherDeviceFragment = new other_device();
     private settings settingsFragment = new settings();
     private Fragment currentFragment;
+    private AlertDialog exitDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +110,14 @@ public class open_screen extends AppCompatActivity {
         updateBottomNavigationViewSelection();
     }
 
+    // New method to switch to the existing my_device fragment
+    public void switchToMyDeviceFragment() {
+        if (myDeviceFragment != null && myDeviceFragment != currentFragment) {
+            switchFragment(myDeviceFragment);
+            bottom_navigation.setSelectedItemId(R.id.my_device);
+        }
+    }
+
     @Override
     public void onBackPressed() {
         if (currentFragment != homeFragment) {
@@ -114,8 +125,14 @@ public class open_screen extends AppCompatActivity {
             switchFragment(homeFragment);
             bottom_navigation.setSelectedItemId(R.id.home_icon);
         } else {
-            Log.d("OpenScreen", "Showing exit dialog from home");
-            showExitConfirmationDialog();
+            Log.d("OpenScreen", "Checking dialog state from home");
+            if (isDialogVisible()) {
+                Log.d("OpenScreen", "Dialog is visible, dismissing it");
+                exitDialog.dismiss();
+            } else {
+                Log.d("OpenScreen", "Showing exit dialog from home");
+                showExitConfirmationDialog();
+            }
         }
     }
 
@@ -140,14 +157,35 @@ public class open_screen extends AppCompatActivity {
         Button positiveButton = customDialogView.findViewById(R.id.dialog_positive);
         Button negativeButton = customDialogView.findViewById(R.id.dialog_negative);
 
-        AlertDialog dialog = new AlertDialog.Builder(this)
+        exitDialog = new AlertDialog.Builder(this)
                 .setView(customDialogView)
                 .setCancelable(false)
                 .create();
 
-        positiveButton.setOnClickListener(v -> finish());
-        negativeButton.setOnClickListener(v -> dialog.dismiss());
-        dialog.show();
+        exitDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+        positiveButton.setOnClickListener(v -> {
+            Log.d("OpenScreen", "Close button clicked, finishing activity");
+            exitDialog.dismiss();
+            finish();
+        });
+
+        negativeButton.setOnClickListener(v -> {
+            Log.d("OpenScreen", "Cancel button clicked, dismissing dialog");
+            exitDialog.dismiss();
+        });
+
+        exitDialog.show();
+
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(exitDialog.getWindow().getAttributes());
+        lp.width = (int) (getResources().getDisplayMetrics().widthPixels * 0.8);
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        exitDialog.getWindow().setAttributes(lp);
+    }
+
+    private boolean isDialogVisible() {
+        return exitDialog != null && exitDialog.isShowing();
     }
 
     private Fragment findVisibleFragment() {

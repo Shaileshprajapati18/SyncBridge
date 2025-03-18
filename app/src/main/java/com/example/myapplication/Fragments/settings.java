@@ -4,33 +4,32 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.Fragment;
-
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.example.myapplication.Activites.About_us;
-import com.example.myapplication.Activites.activity_Login;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+
+import com.example.myapplication.Activities.About_us;
+import com.example.myapplication.Activities.activity_Login;
+import com.example.myapplication.Activities.profile_settings;
 import com.example.myapplication.Model.DatabaseHelper;
 import com.example.myapplication.R;
-import com.example.myapplication.Activites.profile_settings;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -46,7 +45,7 @@ public class settings extends Fragment {
 
     TextView view_details, Logout;
     TextView Username, Email;
-    LinearLayout sendMessageTextView, about_us, faqs;
+    LinearLayout sendMessageTextView, about_us;
     FirebaseAuth mAuth;
     Switch copyPasteSwitch;
     DatabaseHelper databaseHelper;
@@ -54,6 +53,7 @@ public class settings extends Fragment {
     private DatabaseReference reference;
     private String currentUserEmail;
     private ValueEventListener valueEventListener;
+    private AlertDialog exitDialog; // Track the dialog for lifecycle and back press handling
 
     public settings() {
         // Required empty public constructor
@@ -69,6 +69,7 @@ public class settings extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true); // Enable fragment to handle back press
         if (getArguments() != null) {
             // Handle arguments if needed
         }
@@ -84,7 +85,6 @@ public class settings extends Fragment {
         view_details = view.findViewById(R.id.full_details);
         about_us = view.findViewById(R.id.about_us);
         sendMessageTextView = view.findViewById(R.id.send_message_textview);
-        faqs = view.findViewById(R.id.faqs);
         Logout = view.findViewById(R.id.Logout);
         copyPasteSwitch = view.findViewById(R.id.copyPasteSwitch);
         profileImage = view.findViewById(R.id.profile);
@@ -122,13 +122,6 @@ public class settings extends Fragment {
         // Set OnClickListener for Send Message
         sendMessageTextView.setOnClickListener(v -> sendEmail());
 
-        // Set OnClickListener for FAQs
-        faqs.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), com.example.myapplication.Activites.faqs.class);
-            startActivity(intent);
-        });
-
-        // Set OnClickListener for View Details (Profile Settings)
         if (view_details != null) {
             view_details.setOnClickListener(v -> {
                 Intent intent = new Intent(getActivity(), profile_settings.class);
@@ -284,13 +277,13 @@ public class settings extends Fragment {
                     }
                 } else {
                     Log.w("SettingsFragment", "No local data found for email: " + currentUserEmail);
-                    Username.setText("Loading..."); // Temporary placeholder
+                    Username.setText("..."); // Temporary placeholder
                     Email.setText(currentUserEmail);
                     profileImage.setImageResource(R.color.black);
                 }
             } catch (Exception e) {
                 Log.e("SettingsFragment", "Error loading local data: " + e.getMessage());
-                Username.setText("Loading...");
+                Username.setText("...");
                 Email.setText(currentUserEmail);
                 profileImage.setImageResource(R.color.black);
             } finally {
@@ -298,7 +291,7 @@ public class settings extends Fragment {
             }
         } else {
             Log.e("SettingsFragment", "Database cursor is null");
-            Username.setText("Loading...");
+            Username.setText("...");
             Email.setText(currentUserEmail);
             profileImage.setImageResource(R.color.black);
         }
@@ -346,25 +339,42 @@ public class settings extends Fragment {
     }
 
     private void showExitConfirmationDialog() {
+
         View customDialogView = getLayoutInflater().inflate(R.layout.dialog_logout, null);
+
         Button positiveButton = customDialogView.findViewById(R.id.dialog_positive);
         Button negativeButton = customDialogView.findViewById(R.id.dialog_negative);
 
-        AlertDialog dialog = new AlertDialog.Builder(getContext())
+        exitDialog = new AlertDialog.Builder(getContext())
                 .setView(customDialogView)
                 .setCancelable(false)
                 .create();
 
+        exitDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
         positiveButton.setOnClickListener(v -> {
+            Log.d("SettingsFragment", "Logout button clicked, signing out");
             mAuth.signOut();
             Intent intent = new Intent(getActivity(), activity_Login.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+            exitDialog.dismiss();
         });
 
-        negativeButton.setOnClickListener(v -> dialog.dismiss());
+        negativeButton.setOnClickListener(v -> {
+            Log.d("SettingsFragment", "Cancel button clicked, dismissing dialog");
+            exitDialog.dismiss();
+        });
 
-        dialog.show();
+        // Show the dialog
+        exitDialog.show();
+
+        // Adjust dialog width (e.g., 80% of screen width)
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(exitDialog.getWindow().getAttributes());
+        lp.width = (int) (getResources().getDisplayMetrics().widthPixels * 0.8); // 80% of screen width
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        exitDialog.getWindow().setAttributes(lp);
     }
 
     @Override
@@ -372,6 +382,32 @@ public class settings extends Fragment {
         super.onDestroyView();
         if (reference != null && valueEventListener != null) {
             reference.removeEventListener(valueEventListener);
+        }
+        // Dismiss the dialog to prevent window leaks
+        if (exitDialog != null && exitDialog.isShowing()) {
+            exitDialog.dismiss();
+        }
+    }
+
+    // Handle back press in the fragment
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Enable back press handling in the fragment
+        if (getView() != null) {
+            getView().setFocusableInTouchMode(true);
+            getView().requestFocus();
+            getView().setOnKeyListener((v, keyCode, event) -> {
+                if (event.getAction() == android.view.KeyEvent.ACTION_UP && keyCode == android.view.KeyEvent.KEYCODE_BACK) {
+                    if (exitDialog != null && exitDialog.isShowing()) {
+                        Log.d("SettingsFragment", "Back pressed, dismissing dialog");
+                        exitDialog.dismiss();
+                        return true; // Consume the back press
+                    }
+                    return false; // Let the activity handle the back press
+                }
+                return false;
+            });
         }
     }
 }

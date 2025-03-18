@@ -17,6 +17,7 @@
 
     <application
         android:allowBackup="true"
+        android:requestLegacyExternalStorage="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@drawable/appicon"
@@ -26,13 +27,13 @@
         android:theme="@style/Theme.MyApplication"
         tools:targetApi="31">
         <activity
-            android:name=".Activites.notification_Activity"
+            android:name=".Activities.notification_Activity"
             android:exported="false" />
         <activity
-            android:name=".Activites.DeviceListActivity"
+            android:name=".Activities.DeviceListActivity"
             android:exported="false" />
         <activity
-            android:name=".Activites.splashActivity"
+            android:name=".Activities.splashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -41,13 +42,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activites.faqs"
+            android:name=".Activities.About_us"
             android:exported="false" />
         <activity
-            android:name=".Activites.About_us"
-            android:exported="false" />
-        <activity
-            android:name=".Activites.profile_settings"
+            android:name=".Activities.profile_settings"
             android:exported="false" />
 
         <provider
@@ -70,17 +68,17 @@
         </provider>
 
         <activity
-            android:name=".Activites.activity_Login"
+            android:name=".Activities.activity_Login"
             android:exported="true"></activity>
         <activity
-            android:name=".Activites.storageViewer"
+            android:name=".Activities.storageViewer"
             android:exported="false" />
         <activity
-            android:name=".Activites.activity_register"
+            android:name=".Activities.activity_register"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activites.open_screen"
+            android:name=".Activities.open_screen"
             android:exported="true"
             android:screenOrientation="portrait" />
 

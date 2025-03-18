@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activites.open_screen">
+    tools:context=".Activities.open_screen">
 
     <FrameLayout
         android:id="@+id/open_screen"
@@ -18,8 +18,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/black"
-        app:itemTextColor="@color/yellow"
+        android:background="@color/white"
+        app:itemTextColor="@color/blue"
         android:elevation="20dp"
         app:itemBackground="?android:attr/selectableItemBackgroundBorderless"
         app:itemIconTint="@drawable/icon_color"

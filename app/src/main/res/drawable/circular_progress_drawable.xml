@@ -3,10 +3,10 @@
     <item android:id="@android:id/background">
         <shape android:shape="ring"
             android:useLevel="false"
-            android:thicknessRatio="20">
+            android:thicknessRatio="10">
             <size android:width="100dp"
                 android:height="100dp"/>
-            <solid android:color="#333"/>
+            <solid android:color="#F3F3F6"/>
         </shape>
     </item>
 
@@ -16,15 +16,15 @@
             android:pivotX="50%"
             android:pivotY="50%">
             <shape android:shape="ring"
-                android:thicknessRatio="20"
+                android:thicknessRatio="10"
                 android:useLevel="true">
                 <size android:width="100dp"
                     android:height="100dp"/>
                 <gradient
                     android:type="sweep"
                     android:useLevel="true"
-                    android:startColor="#FFFFFF"
-                    android:endColor="#FFFFFF"/>
+                    android:startColor="@color/blue"
+                    android:endColor="@color/blue"/>
             </shape>
         </rotate>
     </item>

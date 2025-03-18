@@ -54,5 +54,8 @@ dependencies {
     implementation ("com.facebook.shimmer:shimmer:0.5.0")
     implementation ("pl.droidsonroids.gif:android-gif-drawable:1.2.24")
     implementation ("de.hdodenhof:circleimageview:3.1.0")
+    implementation ("com.airbnb.android:lottie:6.4.0")
+
+
 
 }

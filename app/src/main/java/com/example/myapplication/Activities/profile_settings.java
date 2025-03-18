@@ -1,4 +1,4 @@
-package com.example.myapplication.Activites;
+package com.example.myapplication.Activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;

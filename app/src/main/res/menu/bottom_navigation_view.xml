@@ -8,23 +8,23 @@
 
     <item android:id="@+id/my_device"
         android:title="My Files"
-        android:icon="@drawable/my_device">
+        android:icon="@drawable/file_icon">
     </item>
 
     <item
         android:id="@+id/scanner"
         android:title=""
-        android:icon="@drawable/plus"
+        android:icon="@drawable/scanner"
         />
 
     <item android:id="@+id/other_device"
         android:title="Linked device"
-        android:icon="@drawable/other_device">
+        android:icon="@drawable/laptop">
     </item>
 
     <item android:id="@+id/settings"
-        android:title="Settings"
-        android:icon="@drawable/settings">
+        android:title="Profile"
+        android:icon="@drawable/profile">
     </item>
 
 
