@@ -25,6 +25,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class activity_Login extends AppCompatActivity {
 
@@ -33,6 +35,7 @@ public class activity_Login extends AppCompatActivity {
     private TextView registerRedirect;
     private TextView forgotPasswordText;
     private FirebaseAuth mAuth;
+    private DatabaseReference reference;  // Added for Realtime Database
     private ProgressBar progressBar;
     private boolean isPasswordVisible = false;
 
@@ -41,8 +44,9 @@ public class activity_Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // Initialize Firebase Auth
+        // Initialize Firebase Auth and Database
         mAuth = FirebaseAuth.getInstance();
+        reference = FirebaseDatabase.getInstance().getReference("Users");
 
         // Check if user is already logged in
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -60,16 +64,14 @@ public class activity_Login extends AppCompatActivity {
         forgotPasswordText = findViewById(R.id.forgotPasswordText);
         progressBar = findViewById(R.id.progressbar);
 
+        // Password visibility toggle (unchanged)
         passwordField.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    // Get the right drawable (drawableEnd)
                     if (passwordField.getCompoundDrawables()[2] != null) {
-                        // Check if the touch is within the bounds of the right drawable
                         if (event.getRawX() >= (passwordField.getRight() - passwordField.getCompoundDrawables()[2].getBounds().width())) {
                             if (isPasswordVisible) {
-                                // Hide password
                                 passwordField.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
                                 passwordField.setCompoundDrawablesWithIntrinsicBounds(
                                         ContextCompat.getDrawable(activity_Login.this, R.drawable.baseline_lock_24),
@@ -78,7 +80,6 @@ public class activity_Login extends AppCompatActivity {
                                         null
                                 );
                             } else {
-                                // Show password
                                 passwordField.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
                                 passwordField.setCompoundDrawablesWithIntrinsicBounds(
                                         ContextCompat.getDrawable(activity_Login.this, R.drawable.baseline_lock_24),
@@ -88,7 +89,6 @@ public class activity_Login extends AppCompatActivity {
                                 );
                             }
                             isPasswordVisible = !isPasswordVisible;
-                            // Move cursor to the end of the text
                             passwordField.setSelection(passwordField.getText().length());
                             return true;
                         }
@@ -98,7 +98,6 @@ public class activity_Login extends AppCompatActivity {
             }
         });
 
-        // Login button click listener
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,7 +105,6 @@ public class activity_Login extends AppCompatActivity {
             }
         });
 
-        // Forgot password click listener
         forgotPasswordText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -114,7 +112,6 @@ public class activity_Login extends AppCompatActivity {
             }
         });
 
-        // Register redirect click listener
         registerRedirect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -146,7 +143,6 @@ public class activity_Login extends AppCompatActivity {
             return;
         }
 
-        // Show progress bar
         progressBar.setVisibility(View.VISIBLE);
 
         // Firebase login
@@ -157,10 +153,13 @@ public class activity_Login extends AppCompatActivity {
                         progressBar.setVisibility(View.GONE);
 
                         if (task.isSuccessful()) {
-                            // Login successful, save user ID and redirect
+                            // Login successful, update password in Realtime Database
+                            String userId = email.replace(".", ",");
+                            updatePasswordInDatabase(userId, password);
+
                             SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
                             SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putString("UserID", email.replace(".", ","));
+                            editor.putString("UserID", userId);
                             editor.apply();
 
                             Intent intent = new Intent(activity_Login.this, open_screen.class);
@@ -173,19 +172,32 @@ public class activity_Login extends AppCompatActivity {
                 });
     }
 
+    // New method to update password in Realtime Database
+    private void updatePasswordInDatabase(String userId, String newPassword) {
+        reference.child(userId).child("password").setValue(newPassword)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            // Password updated successfully in Realtime Database
+                            Toast.makeText(activity_Login.this, "Login successful", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(activity_Login.this, "Failed to update password in database", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
     private void showForgotPasswordDialog() {
-        // Inflate the custom dialog layout
         View customDialogView = getLayoutInflater().inflate(R.layout.dialog_forgot_password, null);
         final EditText emailInput = customDialogView.findViewById(R.id.emailInput);
         Button positiveButton = customDialogView.findViewById(R.id.dialog_positive);
         Button negativeButton = customDialogView.findViewById(R.id.dialog_negative);
 
-        // Create and configure the dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(customDialogView);
         final AlertDialog dialog = builder.create();
 
-        // Send reset email button
         positiveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -195,7 +207,6 @@ public class activity_Login extends AppCompatActivity {
                 } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                     emailInput.setError("Invalid email format");
                 } else {
-                    // Send password reset email via Firebase
                     mAuth.sendPasswordResetEmail(email)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
@@ -212,15 +223,12 @@ public class activity_Login extends AppCompatActivity {
             }
         });
 
-        // Cancel button
         negativeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
             }
         });
-
-        // Show the dialog
         dialog.show();
     }
 }

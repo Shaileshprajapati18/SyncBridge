@@ -1,22 +1,26 @@
 package com.example.myapplication.Fragments;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,8 +29,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.view.ViewGroup;
-
+import com.airbnb.lottie.LottieAnimationView;
 import com.example.myapplication.R;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.zxing.BinaryBitmap;
@@ -67,7 +70,6 @@ public class scanner extends Fragment {
 
         barcodeScannerView.getStatusView().setVisibility(View.GONE);
 
-        // Check and request permission initially
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
         } else {
@@ -84,6 +86,7 @@ public class scanner extends Fragment {
         if (barcodeScannerView != null) {
             barcodeScannerView.decodeContinuous(callback);
             barcodeScannerView.resume();
+            isQrProcessed = false;
             Log.d("ScannerFragment", "Scanning started");
         } else {
             Toast.makeText(getActivity(), "Barcode scanner view is not initialized", Toast.LENGTH_SHORT).show();
@@ -117,10 +120,8 @@ public class scanner extends Fragment {
                 if (isValidUUID(qrData)) {
                     showSuccessDialog(qrData);
                 } else {
-                    showAlert("Invalid QR Code", "The scanned QR code does not contain valid UUID data.");
+                    showAlert();
                 }
-
-                barcodeScannerView.pause();
             }
         }
 
@@ -178,7 +179,6 @@ public class scanner extends Fragment {
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             startScanning();
         }
-        // No re-request on resume to avoid looping
     }
 
     @Override
@@ -196,18 +196,15 @@ public class scanner extends Fragment {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 startScanning();
             } else {
-                // Show custom alert dialog only when permission is denied
                 showCustomPermissionDialog();
             }
         }
     }
 
     private void showCustomPermissionDialog() {
-        // Inflate the custom layout
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         View dialogView = inflater.inflate(R.layout.dialog_permission_denied, null);
 
-        // Create the AlertDialog with the custom view
         android.app.AlertDialog dialog = new android.app.AlertDialog.Builder(getActivity())
                 .setView(dialogView)
                 .setCancelable(false)
@@ -216,7 +213,6 @@ public class scanner extends Fragment {
         Button buttonSettings = dialogView.findViewById(R.id.button_settings);
 
         buttonSettings.setOnClickListener(v -> {
-
             Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
             Uri uri = Uri.fromParts("package", getActivity().getPackageName(), null);
             intent.setData(uri);
@@ -229,6 +225,7 @@ public class scanner extends Fragment {
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         dialog.show();
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -246,7 +243,7 @@ public class scanner extends Fragment {
                         if (isValidUUID(qrData)) {
                             showSuccessDialog(qrData);
                         } else {
-                            showAlert("Invalid QR Code", "The scanned QR code does not contain valid UUID data.");
+                            showAlert();
                         }
                     } else {
                         Toast.makeText(getActivity(), "No QR code found in the image", Toast.LENGTH_SHORT).show();
@@ -259,32 +256,38 @@ public class scanner extends Fragment {
     }
 
     private void showSuccessDialog(String qrData) {
-        ProgressBar progressBar = new ProgressBar(getActivity());
-        progressBar.setIndeterminate(true);
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        View dialogView = inflater.inflate(R.layout.dialog_custom_connection, null);
 
-        LinearLayout layout = new LinearLayout(getActivity());
-        layout.setOrientation(LinearLayout.VERTICAL);
-        layout.setPadding(50, 50, 50, 50);
+        LottieAnimationView animationView = dialogView.findViewById(R.id.animationView);
+        Button cancelButton = dialogView.findViewById(R.id.dialog_cancel_button);
 
-        TextView connectingText = new TextView(getActivity());
-        connectingText.setText("Connecting...");
-        connectingText.setPadding(0, 20, 0, 20);
-
-        layout.addView(progressBar);
-        layout.addView(connectingText);
+        android.app.AlertDialog dialog = new android.app.AlertDialog.Builder(getActivity())
+                .setView(dialogView)
+                .setCancelable(false)
+                .create();
 
         final boolean[] isDialogCanceled = {false};
 
-        new android.app.AlertDialog.Builder(getActivity())
-                .setTitle("Connection")
-                .setView(layout)
-                .setNegativeButton("Cancel", (dialog, which) -> {
-                    isDialogCanceled[0] = true;
-                    dialog.dismiss();
-                })
-                .setCancelable(false)
-                .create()
-                .show();
+        animationView.playAnimation();
+
+        cancelButton.setOnClickListener(v -> {
+            isDialogCanceled[0] = true;
+            animationView.cancelAnimation();
+            dialog.dismiss();
+            startScanning();
+        });
+
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
+
+        WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+        params.width = (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                300,
+                getResources().getDisplayMetrics()
+        );
+        dialog.getWindow().setAttributes(params);
 
         new Thread(() -> {
             try {
@@ -293,29 +296,41 @@ public class scanner extends Fragment {
                 e.printStackTrace();
             }
 
-            if (!isDialogCanceled[0]) {
+            if (!isDialogCanceled[0] && getActivity() != null) {
                 getActivity().runOnUiThread(() -> {
+                    animationView.cancelAnimation();
+                    dialog.dismiss();
                     storeQRCodeData(qrData);
                 });
             }
         }).start();
     }
 
-    private void showAlert(String title, String message) {
-        new android.app.AlertDialog.Builder(getActivity())
-                .setTitle(title)
-                .setMessage(message)
-                .setPositiveButton("OK", (dialog, which) -> {
-                    dialog.dismiss();
-                    if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-                        startScanning();
-                    } else {
-                        requestPermissions(new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
-                    }
-                })
-                .setCancelable(false)
-                .create()
-                .show();
+    private void showAlert() {
+
+        Dialog dialog = new Dialog(getActivity());
+        dialog.setContentView(R.layout.dialog_custom_invalidqqr);
+        dialog.setCancelable(false);
+
+        TextView okButton = dialog.findViewById(R.id.dialog_ok_button);
+        TextView cancelButton = dialog.findViewById(R.id.dialog_cancel_button);
+
+        okButton.setOnClickListener(v -> {
+            dialog.dismiss();
+            if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                isQrProcessed = false;
+                startScanning();
+            } else {
+                requestPermissions(new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
+            }
+        });
+
+        dialog.getWindow().setLayout(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
     }
 
     private Result decodeQRCodeFromBitmap(Bitmap bitmap) {
