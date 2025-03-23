@@ -41,11 +41,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    // Insert or Update Product
     public boolean insertOrUpdateProduct(String firstName, String lastName, String phone, String email, String image) {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        // Check if email exists
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_PRODUCTS + " WHERE " + COLUMN_EMAIL + " = ?", new String[]{email});
         boolean exists = cursor.getCount() > 0;
         cursor.close();

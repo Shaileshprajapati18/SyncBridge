@@ -7,12 +7,12 @@
 
     <ImageView
         android:id="@+id/slider_img"
-        android:layout_width="574.84dp"
-        android:layout_height="496.77dp"
+        android:layout_width="500dp"
+        android:layout_height="400dp"
         android:layout_centerHorizontal="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="44dp"
-        android:src="@drawable/onboardingscreen3" />
+        android:src="@drawable/onboardingscreen2" />
 
     <LinearLayout
         android:id="@+id/button_container"
@@ -68,6 +68,7 @@
             android:background="@drawable/backgroung_overlay"
             android:backgroundTint="@color/blue"
             android:padding="10dp"
+            android:textStyle="bold"
             android:text="Next"
             android:textAlignment="center"
             android:textColor="@android:color/white"

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp"
+    android:backgroundTint="@color/white"
+    app:cardUseCompatPadding="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/iv_notification_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/rounded_card_background"
+            android:backgroundTint="#DBE5EB"
+            android:src="@drawable/notification"
+            app:tint="@color/blue" />
+
+        <!-- Notification Content -->
+        <LinearLayout
+            android:id="@+id/notification_content"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/iv_notification_icon"
+            android:layout_toStartOf="@id/iv_action"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:orientation="vertical">
+
+            <!-- Notification Title -->
+            <TextView
+                android:id="@+id/tv_notification_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New Message"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <!-- Notification Message -->
+            <TextView
+                android:id="@+id/tv_notification_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="You have a new message from John."
+                android:textColor="@android:color/darker_gray"
+                android:textSize="14sp" />
+
+            <!-- Notification Timestamp -->
+            <TextView
+                android:id="@+id/tv_notification_timestamp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="2 hours ago"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <!-- Action Button (e.g., Mark as Read or Delete) -->
+        <ImageView
+            android:id="@+id/iv_action"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_delete"
+            app:tint="@android:color/darker_gray"
+            android:contentDescription="Delete notification" />
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

@@ -40,6 +40,7 @@ dependencies {
     implementation(libs.constraintlayout)
     implementation(libs.firebase.auth)
     implementation(libs.cardview)
+    implementation(libs.firebase.messaging)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -55,7 +56,7 @@ dependencies {
     implementation ("pl.droidsonroids.gif:android-gif-drawable:1.2.24")
     implementation ("de.hdodenhof:circleimageview:3.1.0")
     implementation ("com.airbnb.android:lottie:6.4.0")
-
-
+    implementation(platform("com.google.firebase:firebase-bom:33.10.0"))
+    implementation ("com.google.android.gms:play-services-safetynet:18.1.0")
 
 }

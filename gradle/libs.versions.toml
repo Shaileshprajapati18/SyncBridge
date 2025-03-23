@@ -17,6 +17,7 @@ playServicesAuth = "21.2.0"
 zxingAndroidEmbedded = "4.3.0"
 cardview = "1.0.0"
 recyclerview = "1.4.0"
+firebaseMessaging = "24.1.1"
 
 [libraries]
 core = { module = "com.google.zxing:core", version.ref = "core" }
@@ -35,6 +36,7 @@ play-services-auth = { module = "com.google.android.gms:play-services-auth", ver
 zxing-android-embedded = { module = "com.journeyapps:zxing-android-embedded", version.ref = "zxingAndroidEmbedded" }
 cardview = { group = "androidx.cardview", name = "cardview", version.ref = "cardview" }
 recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
+firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging", version.ref = "firebaseMessaging" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -20,7 +20,11 @@ import android.widget.Toast;
 
 import com.example.myapplication.Model.RegisterModel;
 import com.example.myapplication.R;
+import com.google.android.gms.safetynet.SafetyNet;
+import com.google.android.gms.safetynet.SafetyNetApi;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -38,6 +42,8 @@ public class activity_register extends AppCompatActivity {
     DatabaseReference reference;
     ProgressBar progressBar;
     private boolean isPasswordVisible = false;
+    private static final String SITE_KEY = "6Lf6vvoqAAAAAIJCZOlYgS28bo9Gibj8lfZ4U1i7"; // Get this from reCAPTCHA admin console
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +62,6 @@ public class activity_register extends AppCompatActivity {
         loginRedirect = findViewById(R.id.loginRedirect);
         countryCodePicker = findViewById(R.id.countryCodePicker);
         progressBar=findViewById(R.id.progressbar);
-
 
         passwordField.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -122,7 +127,6 @@ public class activity_register extends AppCompatActivity {
         String phone = phoneField.getText().toString().trim();
         String fullPhoneNumber = countryCodePicker.getSelectedCountryCodeWithPlus() + phone;
 
-        // Validate inputs
         if (TextUtils.isEmpty(firstName)) {
             firstNameField.setError("First name is required");
             firstNameField.requestFocus();
@@ -163,10 +167,8 @@ public class activity_register extends AppCompatActivity {
             passwordField.requestFocus();
             return;
         }
-
         progressBar.setVisibility(View.VISIBLE);
 
-        // Register user with Firebase Auth
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
